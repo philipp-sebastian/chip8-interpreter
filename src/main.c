@@ -1,7 +1,4 @@
-//
-// Created by Sebastian on 28.10.24.
-//
-
+#include "../include/main.h"
 #include <stdio.h>
 
 int main(void)
