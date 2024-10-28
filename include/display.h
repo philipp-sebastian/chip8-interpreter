@@ -5,6 +5,8 @@
 #ifndef CHIP8_INTERPRETER_DISPLAY_H
 #define CHIP8_INTERPRETER_DISPLAY_H
 
+void initializeFontData(Chip8_t* pChip8);
+
 #endif //CHIP8_INTERPRETER_DISPLAY_H
 
 //Initialisierung und Aktualisierung des Displays.

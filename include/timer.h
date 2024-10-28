@@ -7,4 +7,4 @@
 
 #endif //CHIP8_INTERPRETER_TIMER_H
 
-//Verwaltung des Delay-Timers und des Sound-Timers.
+//Verwaltung des Delay-Timers und des Sound-Timers (Funktionalitäten).
