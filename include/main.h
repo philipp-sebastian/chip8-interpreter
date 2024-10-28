@@ -6,3 +6,5 @@
 #define CHIP8_INTERPRETER_MAIN_H
 
 #endif //CHIP8_INTERPRETER_MAIN_H
+
+//hauptschleife, initialisierung
