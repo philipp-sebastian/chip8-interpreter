@@ -12,7 +12,8 @@ Chip8_t* initializeComponents()
     }
 
     //TODO: Initialize Components
-    pChip8->programCounter = 0;
+    //start at program-memory
+    pChip8->programCounter = 0x200;
     //initializing 32x64pixels display
     memset(pChip8->display, 0, sizeof(pChip8->display));
     pChip8->indexRegister = 0;
