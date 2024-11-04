@@ -12,5 +12,6 @@
 #include "input.h"
 #include "main.h"
 #include "timer.h"
+#include "instructions.h"
 
 #endif //CHIP8_INTERPRETER_COMMON_H
