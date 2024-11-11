@@ -6,6 +6,8 @@
 #define CHIP8_INTERPRETER_DISPLAY_H
 
 #include "common.h"
+#define FONTSTARTADRESS 0x50
+#define FONTHEIGHT 5
 
 void initializeFontData(Chip8_t* pChip8);
 

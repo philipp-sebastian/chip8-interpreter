@@ -5,6 +5,9 @@ Chip8_t* initializeComponents()
     Chip8_t* pChip8 = NULL;
     pChip8 = (Chip8_t*) malloc(sizeof(Chip8_t));
 
+    //Set randomizer
+    srand(time(NULL));
+
     if (pChip8 == NULL)
     {
         printf("Error while allocating memory in Heap for Chip8 Components");

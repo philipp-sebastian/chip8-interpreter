@@ -1,5 +1,9 @@
 #include "../include/common.h"
 
+/**
+ *
+ * @return
+ */
 int main(void)
 {
     Chip8_t* pChip8 = initializeComponents();
@@ -15,4 +19,5 @@ int main(void)
         //imlementation
         break;
     }
+
 }

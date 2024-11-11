@@ -40,11 +40,53 @@ int shl_shift_left_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
 
 int sne_skip_if_vx_not_equal_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
 
-int ld_set_i(Chip8_t *pChip8, InstructionData_t *instructionData);
+/**
+ * sets Index register to instruction nnn
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int ld_set_i(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-int jp_v0_plus_addr(Chip8_t *pChip8, InstructionData_t *instructionData);
+    pChip8->indexRegister = instructionData->nnn;
+    return 0;
+}
 
-int rnd_vx_random_and_byte(Chip8_t *pChip8, InstructionData_t *instructionData);
+int jp_v0_plus_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->programCounter = instructionData->nnn + pChip8->gpr[V0];
+
+    return 0;
+}
+
+/**
+ * Gets a random number and ANDs it with nn instruction data and puts it register V0
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int rnd_vx_random_and_byte(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    unsigned char random = rand() % 256;
+    pChip8->gpr[V0] = random & instructionData->nn;
+
+    return 0;
+}
 
 /**
  * draws an n pixels tall sprite depending on index register at given coordinates at vx and vy
@@ -103,24 +145,212 @@ int drw_draw_sprite(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int skp_skip_if_key_pressed(Chip8_t *pChip8, InstructionData_t *instructionData);
+/**
+ * increments the programCounter if the coressponding key to the value of VX is pressed
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int skp_skip_if_key_pressed(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-int sknp_skip_if_key_not_pressed(Chip8_t *pChip8, InstructionData_t *instructionData);
+    if (getKeyboardInput() == pChip8->gpr[instructionData->x])
+    {
+        incrementProgramCounter(pChip8);
+    }
 
-int ld_set_vx_to_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData);
+    return 0;
+}
 
-int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData);
 
-int ld_set_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData);
+int sknp_skip_if_key_not_pressed(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-int ld_set_sound_timer(Chip8_t *pChip8, InstructionData_t *instructionData);
+    if (getKeyboardInput() != pChip8->gpr[instructionData->x])
+    {
+        incrementProgramCounter(pChip8);
+    }
 
-int add_add_i_and_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
+    return 0;
+}
 
-int ld_set_i_to_sprite_addr(Chip8_t *pChip8, InstructionData_t *instructionData);
+/**
+ * puts the value of the delay timer in VX
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int ld_set_vx_to_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-int ld_store_bcd(Chip8_t *pChip8, InstructionData_t *instructionData);
+    pChip8->gpr[instructionData->x] = pChip8->delayTimer;
 
-int ld_store_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
+    return 0;
+}
 
-int ld_read_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
+/**
+ * Wait until a key is pressed and put the value in VX
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->gpr[instructionData->x] = WaitForKeyboardInput();
+
+    return 0;
+}
+
+/**
+ * Sets the delay timer to value in VX
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int ld_set_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->delayTimer = pChip8->gpr[instructionData->x];
+
+    return 0;
+}
+
+int ld_set_sound_timer(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->soundTimer = pChip8->gpr[instructionData->x];
+
+    return 0;
+}
+
+/**
+ * adds the value in VX to the indexRegister
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int add_add_i_and_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->indexRegister += pChip8->gpr[instructionData->x];
+
+    return 0;
+}
+
+/**
+ * Sets indexRegister to the address of the font character in VX. Uses only the last nibble of VX
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int ld_set_i_to_sprite_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->indexRegister = FONTSTARTADRESS + (pChip8->gpr[instructionData->x] & 0xF) * FONTHEIGHT;
+
+    return 0;
+}
+
+/**
+ * Binary coded decimal conversion puts the three demical number parts
+ * from the value in VX and safes them independently starting at the address in indexRegister
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int ld_store_bcd(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    unsigned char value = pChip8->gpr[instructionData->x];
+
+    for (int number = 0; number < 3; number++)
+    {
+        pChip8->memory[pChip8->indexRegister] = value % 10;
+        value /= 10;
+    }
+
+    return 0;
+}
+
+/**
+ * copies the values of V0 - VX into memory starting at the address in indexRegister
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int ld_store_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    //TODO add configurability if
+    // indexRegister should be incremented? Was in old chips but implemented version is more common
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    for (int counter = 0; counter <= instructionData->x; counter ++)
+    {
+        pChip8->memory[pChip8->indexRegister + counter] = pChip8->gpr[counter];
+    }
+
+    return 0;
+}
+
+/**
+ * reads x values starting from the register in indexRegister and saves them in V0 - VX
+ * @param pChip8
+ * @param instructionData
+ * @return
+ */
+int ld_read_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    //TODO add configurability if
+    // indexRegister should be incremented? Was in old chips but implemented version is more common
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    for (int counter = 0; counter <= instructionData->x; counter ++)
+    {
+        pChip8->gpr[counter] = pChip8->memory[pChip8->indexRegister + counter];
+    }
+
+    return 0;
+}
