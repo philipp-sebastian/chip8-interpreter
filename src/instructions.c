@@ -2,42 +2,244 @@
 
 int sys_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData);
 
-int cls_clear_display(Chip8_t *pChip8, InstructionData_t *instructionData);
+int cls_clear_display(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-int ret_return_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData);
+    memset(pChip8->display, 0, sizeof(pChip8->display));
 
-int jp_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData);
+    return 0;
+}
 
-int call_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData);
+int ret_return_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-int se_skip_if_equal(Chip8_t *pChip8, InstructionData_t *instructionData);
+    pChip8->programCounter = pChip8->stack.stackPointer;
+    pChip8->stack.stackPointer--;
 
-int sne_skip_if_not_equal(Chip8_t *pChip8, InstructionData_t *instructionData);
+    return 0;
+}
 
-int se_skip_if_vx_equals_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
+int jp_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-int ld_set_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
+    pChip8->programCounter = instructionData->nnn;
 
-int add_add_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
+    return 0;
+}
 
-int ld_set_vx_to_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
+int call_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-int or_set_vx_or_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
+    if (pChip8->stack.stackPointer >= STACKSIZE)
+    {
+        printf("Error: Stackoverflow\n");
+        return -1;
+    }
 
-int and_set_vx_and_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
+    pChip8->stack.stackMemory[pChip8->stack.stackPointer] = instructionData->nnn;
+    pChip8->stack.stackPointer++;
 
-int xor_set_vx_xor_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
+    return 0;
+}
 
-int add_add_vx_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
+//TODO: pInstructionData!
+int se_skip_if_equal(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-int sub_vx_minus_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
+    if (pChip8->gpr[instructionData->x] == instructionData->nn)
+    {
+        incrementProgramCounter(pChip8);
+    }
 
-int shr_shift_right_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
+    return 0;
+}
 
+int sne_skip_if_not_equal(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    if (pChip8->gpr[instructionData->x] != instructionData->nn)
+    {
+        incrementProgramCounter(pChip8);
+    }
+
+    return 0;
+}
+
+int se_skip_if_vx_equals_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    if (pChip8->gpr[instructionData->x] == pChip8->gpr[instructionData->y])
+    {
+        incrementProgramCounter(pChip8);
+    }
+
+    return 0;
+}
+
+int ld_set_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->gpr[instructionData->x] = instructionData->nn;
+
+    return 0;
+}
+
+int add_add_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->gpr[instructionData->x] += instructionData->nn;
+
+    return 0;
+}
+
+int ld_set_vx_to_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->gpr[instructionData->x] = pChip8->gpr[instructionData->y];
+
+    return 0;
+}
+
+int or_set_vx_or_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->gpr[instructionData->x] |= pChip8->gpr[instructionData->y];
+
+    return 0;
+}
+
+int and_set_vx_and_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->gpr[instructionData->x] &= pChip8->gpr[instructionData->y];
+
+    return 0;
+}
+
+int xor_set_vx_xor_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->gpr[instructionData->x] ^= pChip8->gpr[instructionData->y];
+
+    return 0;
+}
+
+int add_add_vx_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    short result = pChip8->gpr[instructionData->x] + pChip8->gpr[instructionData->y];
+
+    if (result > 255)
+    {
+        pChip8->gpr[VF] = 1;
+    }
+    else
+    {
+        pChip8->gpr[VF] = 0;
+    }
+
+    pChip8->gpr[instructionData->x] = (result & 0xFF);
+
+    return 0;
+}
+
+int sub_vx_minus_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    if (pChip8->gpr[instructionData->x] > pChip8->gpr[instructionData->y])
+    {
+        pChip8->gpr[VF] = 1;
+    }
+    else
+    {
+        pChip8->gpr[VF] = 0;
+    }
+
+    pChip8->gpr[instructionData->x] = pChip8->gpr[instructionData->x] - pChip8->gpr[instructionData->y];
+
+    return 0;
+}
+
+int shr_shift_right_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->gpr[VF] = pChip8->gpr[instructionData->x] & 0x1;
+    pChip8->gpr[instructionData->x] >>= 1;
+
+    return 0;
+}
+
+//TODO: Sebastian
 int subn_vy_minus_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
 
+//TODO: Sebastian
 int shl_shift_left_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
 
+//TODO: Sebastian
 int sne_skip_if_vx_not_equal_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
 
 /**

@@ -5,6 +5,7 @@
 
 #define WIDTH 64
 #define HEIGHT 32
+#define STACKSIZE 16
 
 typedef enum GprRegisters
 {
@@ -13,21 +14,21 @@ typedef enum GprRegisters
 
 typedef struct Stack
 {
-    uint16_t stackMemory[16];
+    uint16_t stackMemory[STACKSIZE];
     unsigned short stackPointer;
 } Stack_t;
 
 //TODO: Program starts at address 0x200 (512 Decimal)
 
 typedef struct Chip8 {
-    char memory[4096];
+    unsigned char memory[4096]; //TODO: signed or unsigned char?
     uint16_t programCounter;
     char display[WIDTH][HEIGHT];
     uint16_t indexRegister;
     Stack_t stack;
-    char delayTimer;
-    char soundTimer;
-    char gpr[16];
+    unsigned char delayTimer;
+    unsigned char soundTimer;
+    unsigned char gpr[16];
 } Chip8_t;
 
 Chip8_t* initializeComponents();
