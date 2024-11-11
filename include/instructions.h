@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+#define BYTESIZE 8
+
 int sys_jump_to_addr(Chip8_t* pChip8, InstructionData_t* instructionData);
 int cls_clear_display(Chip8_t* pChip8, InstructionData_t* instructionData);
 int ret_return_subroutine(Chip8_t* pChip8, InstructionData_t* instructionData);

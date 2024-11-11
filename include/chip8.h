@@ -3,24 +3,16 @@
 
 #include "common.h"
 
-#define V0 0
-#define V1 1
-#define V2 2
-#define V3 3
-#define V4 4
-#define V5 5
-#define V6 6
-#define V7 7
-#define V8 8
-#define V9 9
-#define VA 10
-#define VB 11
-#define VC 12
-#define VD 13
-#define VE 14
-#define VF 15
+#define WIDTH 64
+#define HEIGHT 32
 
-typedef struct Stack {
+typedef enum GprRegisters
+{
+   V0, V1, V2, V3, V4, V5, V6, V7, V8, V9, VA, VB, VC, VD, VE, VF
+} GprRegisters_t;
+
+typedef struct Stack
+{
     uint16_t stackMemory[16];
     unsigned short stackPointer;
 } Stack_t;
@@ -30,7 +22,7 @@ typedef struct Stack {
 typedef struct Chip8 {
     char memory[4096];
     uint16_t programCounter;
-    char display[32][64];
+    char display[WIDTH][HEIGHT];
     uint16_t indexRegister;
     Stack_t stack;
     char delayTimer;
