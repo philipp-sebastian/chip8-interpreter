@@ -1,1 +1,17 @@
+# CMake build directories
+/build/
 /cmake-build-debug/
+/cmake-build-release/
+
+# CMake cache and generated files
+CMakeFiles
+CMakeCache.txt
+*.cmake
+*.o
+*.obj
+
+# macOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
