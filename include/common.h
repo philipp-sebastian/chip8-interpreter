@@ -14,5 +14,6 @@
 #include "main.h"
 #include "timer.h"
 #include "instructions.h"
+#include "loadgame.h"
 
 #endif //CHIP8_INTERPRETER_COMMON_H

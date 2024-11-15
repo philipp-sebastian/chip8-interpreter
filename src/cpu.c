@@ -5,6 +5,11 @@ void incrementProgramCounter(Chip8_t* pChip8)
     pChip8->programCounter += 2;
 }
 
+void setProgramCounter(Chip8_t* pChip8, const uint16_t* address)
+{
+    pChip8->programCounter = *address;
+}
+
 uint16_t fetch(Chip8_t* pChip8)
 {
     uint16_t instruction;
@@ -53,7 +58,7 @@ void decode(Chip8_t* pChip8, uint16_t instruction)
             se_skip_if_equal(pChip8, instructionData);
             break;
         case 0x4:
-            sne_skip_if_vx_not_equal_vy(pChip8, instructionData);
+            sne_skip_if_not_equal(pChip8, instructionData);
             break;
         case 0x5:
             se_skip_if_vx_equals_vy(pChip8, instructionData);

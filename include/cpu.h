@@ -8,14 +8,12 @@
 #include "common.h"
 
 typedef struct InstructionData {
-   char x;
-   char y;
-   char n;
-   char nn;
+   unsigned char x;
+   unsigned char y;
+   unsigned char n;
+   unsigned char nn;
    uint16_t nnn;
 } InstructionData_t ;
-
-typedef void (*command) (Chip8_t* pChip8);
 
 //TODO: Define Makros for Opcode => Return Numbers
 //TODO: Implement Functionpointer Array => Indices are the previous defined Makros
@@ -27,6 +25,7 @@ typedef void (*command) (Chip8_t* pChip8);
 //execute function
 
 void incrementProgramCounter(Chip8_t* pChip8);
+void setProgramCounter(Chip8_t* pChip8, const uint16_t* address);
 uint16_t fetch(Chip8_t* pChip8);
 
 #endif //CHIP8_INTERPRETER_CPU_H

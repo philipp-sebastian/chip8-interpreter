@@ -1,6 +1,9 @@
 #include "../include/common.h"
 
-int sys_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData);
+int sys_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    return jp_jump_to_addr(pChip8, instructionData);
+}
 
 int cls_clear_display(Chip8_t *pChip8, InstructionData_t *instructionData)
 {
@@ -21,8 +24,8 @@ int ret_return_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    pChip8->programCounter = pChip8->stack.stackPointer;
     pChip8->stack.stackPointer--;
+    pChip8->programCounter = pChip8->stack.stackMemory[pChip8->stack.stackPointer];
 
     return 0;
 }
@@ -34,7 +37,7 @@ int jp_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    pChip8->programCounter = instructionData->nnn;
+    setProgramCounter(pChip8, &instructionData->nnn);
 
     return 0;
 }
@@ -183,7 +186,7 @@ int add_add_vx_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    short result = pChip8->gpr[instructionData->x] + pChip8->gpr[instructionData->y];
+    unsigned char result = pChip8->gpr[instructionData->x] + pChip8->gpr[instructionData->y];
 
     if (result > 255)
     {
@@ -233,14 +236,54 @@ int shr_shift_right_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-//TODO: Sebastian
-int subn_vy_minus_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
+int subn_vy_minus_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
 
-//TODO: Sebastian
-int shl_shift_left_vx(Chip8_t *pChip8, InstructionData_t *instructionData);
+    if (pChip8->gpr[instructionData->y] > pChip8->gpr[instructionData->x])
+    {
+        pChip8->gpr[VF] = 1;
+    }
+    else
+    {
+        pChip8->gpr[VF] = 0;
+    }
 
-//TODO: Sebastian
-int sne_skip_if_vx_not_equal_vy(Chip8_t *pChip8, InstructionData_t *instructionData);
+    pChip8->gpr[instructionData->x] = pChip8->gpr[instructionData->y] - pChip8->gpr[instructionData->x];
+
+    return 0;
+}
+
+int shl_shift_left_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    pChip8->gpr[VF] = pChip8->gpr[instructionData->x] & 0x80;
+    pChip8->gpr[instructionData->x] <<= 1;
+
+    return 0;
+}
+
+int sne_skip_if_vx_not_equal_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
+{
+    if (pChip8 == NULL || instructionData == NULL)
+    {
+        return -1;
+    }
+
+    if (pChip8->gpr[instructionData->x] != pChip8->gpr[instructionData->y])
+    {
+        incrementProgramCounter(pChip8);
+    }
+
+    return 0;
+}
 
 /**
  * sets Index register to instruction nnn
@@ -266,7 +309,8 @@ int jp_v0_plus_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    pChip8->programCounter = instructionData->nnn + pChip8->gpr[V0];
+    uint16_t address = instructionData->nnn + pChip8->gpr[V0];
+    setProgramCounter(pChip8, &address);
 
     return 0;
 }
@@ -285,7 +329,7 @@ int rnd_vx_random_and_byte(Chip8_t *pChip8, InstructionData_t *instructionData)
     }
 
     unsigned char random = rand() % 256;
-    pChip8->gpr[V0] = random & instructionData->nn;
+    pChip8->gpr[instructionData->x] = random & instructionData->nn;
 
     return 0;
 }
@@ -304,14 +348,14 @@ int drw_draw_sprite(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    char x = pChip8->gpr[instructionData->x] % WIDTH;
-    char y = pChip8->gpr[instructionData->y] % HEIGHT;
-    char collision = 0;
+    unsigned char x = pChip8->gpr[instructionData->x] % WIDTH;
+    unsigned char y = pChip8->gpr[instructionData->y] % HEIGHT;
+    unsigned char collision = 0;
 
     pChip8->gpr[VF] = 0;
 
     for (int row = 0; row < instructionData->n; row++) {
-        char fetchedByte = pChip8->memory[pChip8->indexRegister + row];
+        unsigned char fetchedByte = pChip8->memory[pChip8->indexRegister + row];
 
         //sprite is clipping, if out of bounce
         if ((y + row) >= HEIGHT)
@@ -328,8 +372,8 @@ int drw_draw_sprite(Chip8_t *pChip8, InstructionData_t *instructionData)
                 break;
             }
 
-            char bitValue = fetchedByte >> (BYTESIZE - 1 - bit) & 1;
-            char displayBitValue = pChip8->display[x + bit][y + row];
+            unsigned char bitValue = fetchedByte >> (BYTESIZE - 1 - bit) & 1;
+            unsigned char displayBitValue = pChip8->display[x + bit][y + row];
 
             if (bitValue == 1 && displayBitValue == 1) {
                 collision = 1;
@@ -360,10 +404,10 @@ int skp_skip_if_key_pressed(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    if (getKeyboardInput() == pChip8->gpr[instructionData->x])
-    {
-        incrementProgramCounter(pChip8);
-    }
+    //TODO: if (getKeyboardInput() == pChip8->gpr[instructionData->x])
+    //{
+      //  incrementProgramCounter(pChip8);
+    //}
 
     return 0;
 }
@@ -376,10 +420,10 @@ int sknp_skip_if_key_not_pressed(Chip8_t *pChip8, InstructionData_t *instruction
         return -1;
     }
 
-    if (getKeyboardInput() != pChip8->gpr[instructionData->x])
-    {
-        incrementProgramCounter(pChip8);
-    }
+    //TODO: if (getKeyboardInput() != pChip8->gpr[instructionData->x])
+    //{
+      //  incrementProgramCounter(pChip8);
+    //}
 
     return 0;
 }
@@ -415,7 +459,8 @@ int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    pChip8->gpr[instructionData->x] = WaitForKeyboardInput();
+    //TODO:
+    //pChip8->gpr[instructionData->x] = WaitForKeyboardInput();
 
     return 0;
 }
@@ -502,9 +547,9 @@ int ld_store_bcd(Chip8_t *pChip8, InstructionData_t *instructionData)
 
     unsigned char value = pChip8->gpr[instructionData->x];
 
-    for (int number = 0; number < 3; number++)
+    for (int number = 2; number >= 0; number--)
     {
-        pChip8->memory[pChip8->indexRegister] = value % 10;
+        pChip8->memory[pChip8->indexRegister + number] = value % 10;
         value /= 10;
     }
 
@@ -526,7 +571,7 @@ int ld_store_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    for (int counter = 0; counter <= instructionData->x; counter ++)
+    for (int counter = 0; counter <= instructionData->x; counter++)
     {
         pChip8->memory[pChip8->indexRegister + counter] = pChip8->gpr[counter];
     }

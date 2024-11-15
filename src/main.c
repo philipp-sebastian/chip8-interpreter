@@ -14,6 +14,8 @@ int main(void)
         return -1;
     }
 
+    loadGame(pChip8);
+
     while (1)
     {
         //imlementation

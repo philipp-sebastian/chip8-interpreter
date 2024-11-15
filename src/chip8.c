@@ -1,6 +1,6 @@
 #include "../include/common.h"
 
-Chip8_t* initializeComponents()
+Chip8_t* initializeComponents(void)
 {
     Chip8_t* pChip8 = NULL;
     pChip8 = (Chip8_t*) malloc(sizeof(Chip8_t));
