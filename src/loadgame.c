@@ -14,7 +14,7 @@ int loadGame(Chip8_t* pChip8)
     const char* filePath = "../games/wonkypong.ch8";
     FILE* fileHandle;
 
-    if ((fileHandle = fopen(filePath, "r")) == NULL)
+    if ((fileHandle = fopen(filePath, "rb")) == NULL)
     {
         perror("Error while opening the file: ");
         return -1;
@@ -42,11 +42,11 @@ int loadGame(Chip8_t* pChip8)
 
     fclose(fileHandle);
 
-    printf("%d Romlen: %d\n", (int) readBytes, (int) rom_len);
-    for (size_t i = 0; i < rom_len; i++)
-    {
-        printf("%d ", *(pChip8->memory + STARTGAMEMEMORY + i));
-    }
+//    printf("%d Romlen: %d\n", (int) readBytes, (int) rom_len);
+//    for (size_t i = 0; i < rom_len; i++)
+//    {
+//        printf("%d ", *(pChip8->memory + STARTGAMEMEMORY + i));
+//    }
 
     return 0;
 }

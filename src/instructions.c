@@ -186,7 +186,7 @@ int add_add_vx_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    unsigned char result = pChip8->gpr[instructionData->x] + pChip8->gpr[instructionData->y];
+    unsigned int result = pChip8->gpr[instructionData->x] + pChip8->gpr[instructionData->y];
 
     if (result > 255)
     {
