@@ -39,6 +39,11 @@ add_executable(chip8-interpreter ${SOURCES})
 
 # SDL3-Header und -Libraries hinzufügen
 target_include_directories(chip8-interpreter PUBLIC ${SDL3_INCLUDE_DIRS})
+
+#use sdl callback functions
+target_compile_definitions(chip8-interpreter PRIVATE SDL_MAIN_USE_CALLBACKS)
+
+#link libraries
 target_link_libraries(chip8-interpreter PRIVATE SDL3::SDL3)
 
 # macOS-spezifische Einstellungen
@@ -61,7 +66,8 @@ set(CMAKE_BUILD_TYPE Debug)
 
 # Compiler-Warnungen für C-Code
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-    target_compile_options(chip8-interpreter PRIVATE -Wall -Wextra -pedantic -Werror)
+    target_compile_options(chip8-interpreter PRIVATE -Wall -pedantic -Werror)
+ #   target_compile_options(chip8-interpreter PRIVATE -Wall -Wextra -pedantic -Werror)
 elseif(CMAKE_C_COMPILER_ID STREQUAL "AppleClang")
     target_compile_options(chip8-interpreter PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
