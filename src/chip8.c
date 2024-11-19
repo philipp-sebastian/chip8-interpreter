@@ -10,7 +10,7 @@ Chip8_t* initializeComponents(void)
 
     if (pChip8 == NULL)
     {
-        printf("Error while allocating memory in Heap for Chip8 Components");
+        SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Error while allocating memory in Heap for Chip8 Components\n");
         return NULL;
     }
 

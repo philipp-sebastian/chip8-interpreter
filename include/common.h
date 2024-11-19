@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <SDL3/SDL.h>
 
 #include "chip8.h"
 #include "cpu.h"
@@ -15,5 +16,6 @@
 #include "timer.h"
 #include "instructions.h"
 #include "loadgame.h"
+#include "application.h"
 
 #endif //CHIP8_INTERPRETER_COMMON_H
