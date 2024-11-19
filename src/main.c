@@ -1,8 +1,9 @@
 #include "../include/common.h"
 #include "SDL3/SDL_main.h"
 
-SDL_AppResult SDL_AppInit(void** appData, int argc, char*argv[])
+SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
 {
+    //TODO remove this
     int i = argc;
     char** a = argv;
     printf("%d %s", i , *a);
@@ -17,12 +18,17 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char*argv[])
     AppData_t* data = malloc(sizeof(AppData_t));
     WindowData_t* windowData = malloc(sizeof(WindowData_t));
 
-    *appData = (void*)data;
-
     data->windowData = windowData;
     data->pChip8 = pChip8;
 
-    int renderScale = 10; //TODO: Calculate the correct Renderscale
+    *appData = (void*)data;
+
+    if (data->windowData == NULL)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_ERROR, "windowdata is null\n");
+    }
+
+    int renderScale = 20; //TODO: Calculate the correct Renderscale
 
     if (!SDL_CreateWindowAndRenderer("Chip8-Interpreter", WIDTH * renderScale, HEIGHT * renderScale, 0, &windowData->window, &windowData->renderer))
     {
@@ -32,7 +38,7 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char*argv[])
 
     SDL_SetRenderScale(windowData->renderer, (float) renderScale, (float) renderScale);
 
-    clearScreen(appData);
+    clearScreen(*appData);
 
     return SDL_APP_CONTINUE;
 }
