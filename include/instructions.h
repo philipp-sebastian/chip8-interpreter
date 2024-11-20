@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+typedef struct AppData AppData_t;
+
 #define BYTESIZE 8
 
 int sys_jump_to_addr(Chip8_t* pChip8, InstructionData_t* instructionData);
@@ -28,7 +30,7 @@ int sne_skip_if_vx_not_equal_vy(Chip8_t* pChip8, InstructionData_t* instructionD
 int ld_set_i(Chip8_t* pChip8, InstructionData_t* instructionData);
 int jp_v0_plus_addr(Chip8_t* pChip8, InstructionData_t* instructionData);
 int rnd_vx_random_and_byte(Chip8_t* pChip8, InstructionData_t* instructionData);
-int drw_draw_sprite(Chip8_t* pChip8, InstructionData_t* instructionData);
+int drw_draw_sprite(AppData_t* appData, InstructionData_t* instructionData);
 int skp_skip_if_key_pressed(Chip8_t* pChip8, InstructionData_t* instructionData);
 int sknp_skip_if_key_not_pressed(Chip8_t* pChip8, InstructionData_t* instructionData);
 int ld_set_vx_to_delay_timer(Chip8_t* pChip8, InstructionData_t* instructionData);

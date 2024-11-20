@@ -3,11 +3,6 @@
 
 SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
 {
-    //TODO remove this
-    int i = argc;
-    char** a = argv;
-    printf("%d %s", i , *a);
-
     Chip8_t* pChip8 = initializeComponents();
 
     if (pChip8 == NULL)
@@ -17,7 +12,9 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
 
     AppData_t* data = malloc(sizeof(AppData_t));
     WindowData_t* windowData = malloc(sizeof(WindowData_t));
+    UpdateTracker_t* updateTracker = malloc(sizeof(UpdateTracker_t));
 
+    windowData->updateTracker = updateTracker;
     data->windowData = windowData;
     data->pChip8 = pChip8;
 
@@ -38,26 +35,58 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
 
     SDL_SetRenderScale(windowData->renderer, (float) renderScale, (float) renderScale);
 
-    clearScreen(*appData);
+    clearScreen(data);
 
     return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult SDL_AppIterate(void* appData)
 {
-    (void)appData; // Unused parameter
+    AppData_t* data = (AppData_t*) appData;
+
+    Uint64 frameStart = SDL_GetTicks();
+    drawDisplay(data->windowData);
+    Uint64 frameEnd = SDL_GetTicks();
+
+    Uint64 frameTime = frameEnd - frameStart;
+
+    int timeLeft = DESIRED_DELTA_TIME - (float) frameTime;
+
+    if (timeLeft < 0)
+    {
+        timeLeft = 0;
+    }
+
+    SDL_Delay(timeLeft);
+
     return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult SDL_AppEvent(void* appData, SDL_Event* event)
 {
-    (void)appData; // Unused parameter
-    (void)event;   // Unused parameter
+    switch (event->type) {
+        case SDL_EVENT_QUIT:
+        return SDL_APP_SUCCESS;
+    }
+
+    switch (event->key.key) {
+        case SDLK_ESCAPE:
+            return SDL_APP_SUCCESS;
+    }
+
     return SDL_APP_CONTINUE;
 }
 
 void SDL_AppQuit(void* appData, SDL_AppResult result)
 {
-    (void)appData; // Unused parameter
-    (void)result;  // Unused parameter
+    AppData_t* data = (AppData_t*) appData;
+
+    SDL_DestroyWindow(data->windowData->window);
+    SDL_DestroyRenderer(data->windowData->renderer);
+
+    free(data->windowData->updateTracker);
+    free(data->windowData);
+    free(data->pChip8);
+    free(data);
+
 }

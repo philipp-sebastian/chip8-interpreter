@@ -341,21 +341,21 @@ int rnd_vx_random_and_byte(Chip8_t *pChip8, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int drw_draw_sprite(Chip8_t *pChip8, InstructionData_t *instructionData)
+int drw_draw_sprite(AppData_t* appData, InstructionData_t *instructionData)
 {
-    if (pChip8 == NULL || instructionData == NULL)
+    if (appData->pChip8 == NULL || instructionData == NULL)
     {
         return -1;
     }
 
-    unsigned char x = pChip8->gpr[instructionData->x] % WIDTH;
-    unsigned char y = pChip8->gpr[instructionData->y] % HEIGHT;
+    unsigned char x = appData->pChip8->gpr[instructionData->x] % WIDTH;
+    unsigned char y = appData->pChip8->gpr[instructionData->y] % HEIGHT;
     unsigned char collision = 0;
 
-    pChip8->gpr[VF] = 0;
+    appData->pChip8->gpr[VF] = 0;
 
     for (int row = 0; row < instructionData->n; row++) {
-        unsigned char fetchedByte = pChip8->memory[pChip8->indexRegister + row];
+        unsigned char fetchedByte = appData->pChip8->memory[appData->pChip8->indexRegister + row];
 
         //sprite is clipping, if out of bounce
         if ((y + row) >= HEIGHT)
@@ -373,19 +373,39 @@ int drw_draw_sprite(Chip8_t *pChip8, InstructionData_t *instructionData)
             }
 
             unsigned char bitValue = fetchedByte >> (BYTESIZE - 1 - bit) & 1;
-            unsigned char displayBitValue = pChip8->display[x + bit][y + row];
+            unsigned char displayBitValue = appData->pChip8->display[x + bit][y + row];
 
             if (bitValue == 1 && displayBitValue == 1) {
                 collision = 1;
             }
 
+            eColor_t currentColor = appData->pChip8->display[x + bit][y + row];
+            eColor_t result = 2; //TODO: Mach ein Makro!
+
             //flip bit
-            pChip8->display[x + bit][y + row] ^= bitValue;
+            if((currentColor ^ bitValue) != currentColor)
+            {
+                if ((currentColor ^ bitValue) == BLACK)
+                {
+                    result = BLACK;
+                }
+                else
+                {
+                    result = WHITE;
+                }
+            }
+
+            if (result != 2)
+            {
+                PixelData_t pixelData = { {x + bit, y + row},  result, 255};
+
+                updatePixel(appData, pixelData);
+            }
         }
     }
 
     if (collision == 1) {
-        pChip8->gpr[VF] = collision;
+        appData->pChip8->gpr[VF] = collision;
     }
 
     return 0;

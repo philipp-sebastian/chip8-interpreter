@@ -16,12 +16,30 @@ void setRendererColor(SDL_Renderer* renderer, eColor_t color, unsigned char alph
     }
 }
 
-void clearScreen(void* appData)
+void clearScreen(AppData_t* appData)
 {
-    AppData_t* data = (AppData_t*) appData;
+    memset(appData->pChip8->display, 0, sizeof(appData->pChip8->display));
+    setRendererColor(appData->windowData->renderer, BLACK, 255);
+    SDL_RenderClear(appData->windowData->renderer);
+    setRendererColor(appData->windowData->renderer, WHITE, 255);
+}
 
-    memset(data->pChip8->display, 0, sizeof(data->pChip8->display));
-    setRendererColor(data->windowData->renderer, BLACK, 255);
-    SDL_RenderClear(data->windowData->renderer);
-    setRendererColor(data->windowData->renderer, WHITE, 255);
+void updatePixel(AppData_t* appData, PixelData_t pixelData)
+{
+    appData->pChip8->display[pixelData.position.x][pixelData.position.y] = pixelData.color;
+    appData->windowData->updateTracker->pixels[appData->windowData->updateTracker->updateCounter] = pixelData;
+
+    appData->windowData->updateTracker->updateCounter++;
+}
+
+void drawDisplay(WindowData_t* windowData)
+{
+    for (int i = 0; i < windowData->updateTracker->updateCounter; i++)
+    {
+        setRendererColor(windowData->renderer, windowData->updateTracker->pixels[i].color, windowData->updateTracker->pixels[i].alpha);
+        SDL_RenderPoint(windowData->renderer, windowData->updateTracker->pixels[i].position.x, windowData->updateTracker->pixels[i].position.y);
+    }
+
+    windowData->updateTracker->updateCounter = 0;
+    SDL_RenderPresent(windowData->renderer);
 }
