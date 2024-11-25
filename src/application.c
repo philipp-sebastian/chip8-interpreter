@@ -2,7 +2,7 @@
 // Created by Sebastian on 19.11.24.
 //
 
-#include "../include/application.h"
+#include "../include/common.h"
 
 void setRendererColor(SDL_Renderer* renderer, eColor_t color, unsigned char alpha)
 {

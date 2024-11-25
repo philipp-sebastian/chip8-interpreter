@@ -2,7 +2,7 @@
 // Created by Sebastian on 25.11.24.
 //
 
-#include "../include/menu.h"
+#include "../include/common.h"
 
 void loadMenu(AppData_t* appData)
 {

@@ -2,7 +2,7 @@
 // Created by Sebastian on 25.11.24.
 //
 
-#include "../include/fontdata.h"
+#include "../include/common.h"
 
 unsigned char* initializeFont(void)
 {
