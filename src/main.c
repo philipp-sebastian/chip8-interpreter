@@ -26,7 +26,7 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "windowdata is null\n");
     }
 
-    if (!SDL_CreateWindowAndRenderer("Chip8-Interpreter", WIDTH, HEIGHT, 0, &windowData->window, &windowData->renderer))
+    if (!SDL_CreateWindowAndRenderer("Chip8-Interpreter", WIDTH * DEFAULT_RENDER_SCALE, HEIGHT * DEFAULT_RENDER_SCALE, 0, &windowData->window, &windowData->renderer))
     {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Unable to create Window and Renderer\n");
         return SDL_APP_FAILURE;

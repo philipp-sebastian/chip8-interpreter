@@ -13,9 +13,11 @@ void loadMenu(AppData_t* appData)
 
 void drawMenuSelection(AppData_t* appData)
 {
-    int scale = 5;
+    int scale = 2;
 
-    drawLetter(appData, fS, 0, 0, scale, WHITE, 255);
+    drawLetter(appData, fS, 0 * scale, 0 * scale, scale, WHITE, 255);
+    drawLetter(appData, fT, 6 * scale, 0 * scale, scale, WHITE, 255);
+    drawLetter(appData, fA, 12 * scale, 0 * scale, scale, WHITE, 255);
 }
 
 SDL_AppResult MenuEventHandler(AppData_t* appData, SDL_Event* event)

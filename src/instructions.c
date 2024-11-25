@@ -546,7 +546,7 @@ int ld_set_i_to_sprite_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    pChip8->indexRegister = FONTSTARTADRESS + (pChip8->gpr[instructionData->x] & 0xF) * FONTHEIGHT;
+    pChip8->indexRegister = FONTSTARTADRESS + (pChip8->gpr[instructionData->x] & 0xF) * CHIP8_FONT_HEIGHT;
 
     return 0;
 }

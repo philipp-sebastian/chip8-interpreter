@@ -36,7 +36,7 @@ typedef struct PixelData
 
 typedef struct UpdateTracker
 {
-    PixelData_t pixels[WIDTH * HEIGHT];
+    PixelData_t pixels[WIDTH * HEIGHT * DEFAULT_RENDER_SCALE * DEFAULT_RENDER_SCALE];
     unsigned int updateCounter;
 } UpdateTracker_t;
 
@@ -53,6 +53,7 @@ typedef struct AppData
     Chip8_t* pChip8;
     WindowData_t* windowData;
     unsigned char* fontData;
+    unsigned char display[WIDTH * DEFAULT_RENDER_SCALE][HEIGHT * DEFAULT_RENDER_SCALE];
 } AppData_t;
 
 void setRendererColor(SDL_Renderer* renderer, eColor_t color, unsigned char alpha);
