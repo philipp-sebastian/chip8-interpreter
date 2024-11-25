@@ -2,7 +2,7 @@
 // Created by Sebastian on 19.11.24.
 //
 
-#include "common.h"
+#include "../include/application.h"
 
 void setRendererColor(SDL_Renderer* renderer, eColor_t color, unsigned char alpha)
 {
@@ -42,4 +42,62 @@ void drawDisplay(WindowData_t* windowData)
 
     windowData->updateTracker->updateCounter = 0;
     SDL_RenderPresent(windowData->renderer);
+}
+
+void changeResolution(WindowData_t* windowData)
+{
+    int resolutionWidth = WIDTH * DEFAULT_RENDER_SCALE;
+    int newRenderscale;
+
+    switch (windowData->currentScreen) {
+        case MENU:
+            newRenderscale = resolutionWidth / 640;
+            break;
+        case CHIP8:
+            newRenderscale = DEFAULT_RENDER_SCALE;
+            break;
+        case OPTION:
+            newRenderscale = resolutionWidth / 640;
+            break;
+    }
+
+    SDL_SetWindowSize(windowData->window, WIDTH * newRenderscale, HEIGHT * newRenderscale);
+    SDL_SetRenderScale(windowData->renderer, (float) newRenderscale, (float) newRenderscale);
+}
+
+void drawLetter(AppData_t* appData, eLetters_t letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color, unsigned char alpha)
+{
+    unsigned int letterIndex = letter * FONT_HEIGHT;
+
+    for (unsigned int height = 0; height < FONT_HEIGHT; height++)
+    {
+        unsigned char rowData = appData->fontData[letterIndex + height];
+
+        for (unsigned int width = 0; width < FONT_WIDTH; width++)
+        {
+            if ((rowData >> (8 - width) & 1) == 1)
+            {
+                for (unsigned int wScale = 0; wScale < scale; wScale++)
+                {
+                    for (unsigned int hScale = 0; hScale < scale; hScale++)
+                    {
+                        //position color alpha
+                        PixelData_t pixelData = { {wScale + width + x, hScale + height + y}, color, alpha };
+                        updatePixel(appData, pixelData);
+                    }
+                }
+            }
+            else
+            {
+                for (unsigned int wScale = 0; wScale < scale; wScale++)
+                {
+                    for (unsigned int hScale = 0; hScale < scale; hScale++)
+                    {
+                        PixelData_t pixelData = { {wScale + width + x, hScale + height + y}, BLACK, 255 };
+                        updatePixel(appData, pixelData);
+                    }
+                }
+            }
+        }
+    }
 }
