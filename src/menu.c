@@ -6,7 +6,7 @@
 
 void loadMenu(AppData_t *appData) {
     appData->windowData->currentScreen = MENU;
-    appData->menuDotPosition = 0;
+    appData->menuData->selection.selectedItem = START_GAME;
     changeResolution(appData->windowData);
     drawMenuSelection(appData);
 }
@@ -29,12 +29,12 @@ void drawMenuSelection(AppData_t *appData) {
 
     for (int i = 0; i < 4; i++) //TODO Makros
     {
-        appData->menuItemDotPositions[i].x = startX - widthFactor;
-        appData->menuItemDotPositions[i].y = startY + i * heightFactor;
+        appData->menuData->selection.positions[i].x = startX - widthFactor;
+        appData->menuData->selection.positions[i].y = startY + i * heightFactor;
     }
 
-    drawLetter(appData, RF_DOT, appData->menuItemDotPositions[appData->menuDotPosition].x,
-               appData->menuItemDotPositions[appData->menuDotPosition].y, FONT_SCALE_FACTOR, WHITE, 255);
+    drawLetter(appData, RF_DOT, appData->menuData->selection.positions[appData->menuData->selection.selectedItem].x,
+               appData->menuData->selection.positions[appData->menuData->selection.selectedItem].y, FONT_SCALE_FACTOR, WHITE, 255);
 
     int symbolBuf[10];
     StringToSymbols("START GAME", symbolBuf, sizeof(symbolBuf)); //TODO: Change in lib
@@ -81,36 +81,80 @@ SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
             return SDL_APP_SUCCESS;
     }
 
+    const SDL_DialogFileFilter filters[] = {
+            {"Chip8-Game", "ch8"}
+    };
+
     switch (event->type) {
         case SDL_EVENT_KEY_DOWN:
+
             switch (event->key.key) {
                 case SDLK_S:
                 case SDLK_DOWN:
-                    if (appData->menuDotPosition < 3) {
-                        drawLetter(appData, RF_DOT, appData->menuItemDotPositions[appData->menuDotPosition].x,
-                                   appData->menuItemDotPositions[appData->menuDotPosition].y, FONT_SCALE_FACTOR, BLACK,
-                                   255);
-                        appData->menuDotPosition++;
-                        drawLetter(appData, RF_DOT, appData->menuItemDotPositions[appData->menuDotPosition].x,
-                                   appData->menuItemDotPositions[appData->menuDotPosition].y, FONT_SCALE_FACTOR, WHITE,
-                                   255);
+                    if (appData->menuData->selection.selectedItem < 3) {
+                        Position_t position;
+                        position = appData->menuData->selection.positions[appData->menuData->selection.selectedItem];
+                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_FACTOR, BLACK, 255);
+                        appData->menuData->selection.selectedItem++;
+                        position = appData->menuData->selection.positions[appData->menuData->selection.selectedItem];
+                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_FACTOR, WHITE, 255);
                     }
                     break;
                 case SDLK_W:
                 case SDLK_UP:
-                    if (appData->menuDotPosition > 0) {
-                        drawLetter(appData, RF_DOT, appData->menuItemDotPositions[appData->menuDotPosition].x,
-                                   appData->menuItemDotPositions[appData->menuDotPosition].y, FONT_SCALE_FACTOR, BLACK,
-                                   255);
-                        appData->menuDotPosition--;
-                        drawLetter(appData, RF_DOT, appData->menuItemDotPositions[appData->menuDotPosition].x,
-                                   appData->menuItemDotPositions[appData->menuDotPosition].y, FONT_SCALE_FACTOR, WHITE,
-                                   255);
+                    if (appData->menuData->selection.selectedItem > 0) {
+                        Position_t position;
+                        position = appData->menuData->selection.positions[appData->menuData->selection.selectedItem];
+                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_FACTOR, BLACK, 255);
+                        appData->menuData->selection.selectedItem--;
+                        position = appData->menuData->selection.positions[appData->menuData->selection.selectedItem];
+                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_FACTOR, WHITE, 255);
+                    }
+                    break;
+                case SDLK_RETURN:
+                    switch (appData->menuData->selection.selectedItem) {
+                        case START_GAME:
+                            break;
+                        case LOAD_GAME:
+
+                            SDL_ShowOpenFileDialog(openFileHandler, NULL ,appData->windowData->window, filters, 1, "../games", 0);
+                            break;
+                        case OPTIONS:
+                            break;
+                        case EXIT:
+                            return SDL_APP_SUCCESS;
                     }
                     break;
             }
     }
     return SDL_APP_CONTINUE;
+}
+
+void(*openFileHandler)(void * userdata, const char *const * fileList, int filter)
+{
+    AppData_t* data = (AppData_t*) userdata;
+
+    if (data == NULL)
+    {
+        return;
+    }
+
+    if (fileList == NULL)
+    {
+        if (filter == -1)
+        {
+            SDL_Log("File format is not supported");
+        }
+        else
+        {
+            SDL_Log("Error or dialog was cancelled");
+        }
+
+        return;
+    }
+
+    loadGame(data->pChip8, *fileList);
+
 }
 
 

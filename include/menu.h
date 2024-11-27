@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "application.h"
+#include "loadgame.h"
 
 #define FONT_SCALE_FACTOR 2
 
@@ -19,7 +20,7 @@ typedef enum MenuSelection
 
 typedef struct SelectedItem
 {
-  Position_t position;
+  Position_t positions[4];
   eMenuSelection_t selectedItem;
 } SelectedItem_t;
 
@@ -31,5 +32,6 @@ typedef struct MenuData
 void loadMenu(AppData_t* appData);
 void drawMenuSelection(AppData_t* appData);
 SDL_AppResult MenuEventHandler(AppData_t* appData, SDL_Event* event);
+void(*openFileHandler)(void *, const char *const *, int);
 
 #endif //CHIP8_INTERPRETER_MENU_H

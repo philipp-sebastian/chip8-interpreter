@@ -4,14 +4,13 @@
 
 #include "../include/loadgame.h"
 
-int loadGame(Chip8_t* pChip8)
+int loadGame(Chip8_t* pChip8, const char* filePath)
 {
     if (pChip8 == NULL)
     {
         return -1;
     }
 
-    const char* filePath = "../games/wonkypong.ch8";
     FILE* fileHandle;
 
     if ((fileHandle = fopen(filePath, "rb")) == NULL)
@@ -35,7 +34,7 @@ int loadGame(Chip8_t* pChip8)
 
     if (readBytes != rom_len)
     {
-        printf("Error while reading\n");
+        printf("Error while reading\n"); //TODO: SDL_Log
         fclose(fileHandle);
         return -1;
     }

@@ -8,6 +8,6 @@
 #include "common.h"
 #include "chip8.h"
 
-int loadGame(Chip8_t* pChip8);
+int loadGame(Chip8_t* pChip8, const char* filePath);
 
 #endif //CHIP8_INTERPRETER_LOADGAME_H

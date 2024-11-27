@@ -25,12 +25,14 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
     *appData = (void*)data;
     WindowData_t* windowData = malloc(sizeof(WindowData_t));
     UpdateTracker_t* updateTracker = malloc(sizeof(UpdateTracker_t));
+    MenuData_t* menuData = malloc(sizeof(MenuData_t));
     unsigned char* fontData = InitializeFont();
 
     windowData->updateTracker = updateTracker;
     data->windowData = windowData;
     data->pChip8 = pChip8;
     data->fontData = fontData;
+    data->menuData = menuData;
 
     if (data->windowData == NULL)
     {
@@ -103,6 +105,7 @@ void SDL_AppQuit(void* appData, SDL_AppResult result)
 
     free(data->windowData->updateTracker);
     free(data->windowData);
+    free(data->menuData);
     free(data->pChip8);
     free(data);
 
