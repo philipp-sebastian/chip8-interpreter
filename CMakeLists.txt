@@ -52,8 +52,8 @@ target_include_directories(chip8-interpreter PRIVATE ${RETROFONT_INCLUDE_DIR})
 
 # Link with the static library
 if(WIN32)
-
-    target_link_libraries(chip8-interpreter PRIVATE ${RETROFONT_LIB_DIR}/libRetroFont_Static_WIN.a)
+    #windows uses the dynamic library for now
+    target_link_libraries(chip8-interpreter PRIVATE ${RETROFONT_LIB_DIR}/libRetroFont_Shared_WIN.dll)
 
 elseif (APPLE)
 
@@ -61,7 +61,7 @@ elseif (APPLE)
 
 elseif (UNIX)
 
-    target_link_libraries(chip8-interpreter PRIVATE ${RETROFONT_LIB_DIR}/libRetroFont_Static_UNIX.a)
+    target_link_libraries(chip8-interpreter PRIVATE ${RETROFONT_LIB_DIR}/libRetroFont_Static_UNIX.a -lstdc++)
 
 else ()
 
@@ -89,6 +89,7 @@ endif()
 
 # Debugging aktivieren (optional)
 set(CMAKE_BUILD_TYPE Debug)
+
 
 # Compiler-Warnungen für C-Code
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
