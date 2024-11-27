@@ -7,6 +7,10 @@ project(chip8-interpreter C)
 # Setze den C-Standard auf C11
 set(CMAKE_C_STANDARD 11)
 
+#fretrofont
+set(RETROFONT_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/lib/retrofont/include")
+set(RETROFONT_LIB_DIR "${CMAKE_SOURCE_DIR}/lib/retrofont/libRetroFont")
+
 # Include the command that downloads libraries
 include(FetchContent)
 
@@ -42,6 +46,28 @@ target_include_directories(chip8-interpreter PUBLIC ${SDL3_INCLUDE_DIRS})
 
 #use sdl callback functions
 target_compile_definitions(chip8-interpreter PRIVATE SDL_MAIN_USE_CALLBACKS)
+
+# Add the include directory for RetroFont
+target_include_directories(chip8-interpreter PRIVATE ${RETROFONT_INCLUDE_DIR})
+
+# Link with the static library
+if(WIN32)
+
+    target_link_libraries(chip8-interpreter PRIVATE ${RETROFONT_LIB_DIR}/libRetroFont_Static_WIN.a)
+
+elseif (APPLE)
+
+    target_link_libraries(chip8-interpreter PRIVATE ${RETROFONT_LIB_DIR}/libRetroFont_Static_MACOS.a -lc++)
+
+elseif (UNIX)
+
+    target_link_libraries(chip8-interpreter PRIVATE ${RETROFONT_LIB_DIR}/libRetroFont_Static_UNIX.a)
+
+else ()
+
+    target_link_libraries(chip8-interpreter PRIVATE ${RETROFONT_LIB_DIR}/libRetroFont_Static.a)
+
+endif ()
 
 #link libraries
 target_link_libraries(chip8-interpreter PRIVATE SDL3::SDL3)

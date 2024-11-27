@@ -33,7 +33,7 @@ void updatePixel(AppData_t* appData, PixelData_t pixelData)
             break;
         case OPTION:
         case MENU:
-            appData->display[pixelData.position.x][pixelData.position.y] = pixelData.color;
+            appData->display[pixelData.position.x][pixelData.position.y] = pixelData.color; //TODO: Not needed, change code to simple if else
             break;
     }
 
@@ -59,32 +59,33 @@ void changeResolution(WindowData_t* windowData)
 
     switch (windowData->currentScreen) {
         case CHIP8:
-            newRenderscale = DEFAULT_RENDER_SCALE;
+            newRenderscale = CHIP8_RENDER_SCALE; //for a 64x32 display because (1280x640)/20 => 64x32
             break;
         case OPTION:
         case MENU:
-            newRenderscale = 4;
+            newRenderscale = MENU_RENDER_SCALE;
             break;
     }
 
     SDL_SetRenderScale(windowData->renderer, (float) newRenderscale, (float) newRenderscale);
+
 }
 
-void drawLetter(AppData_t* appData, eLetters_t letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color, unsigned char alpha)
+void drawLetter(AppData_t* appData, enum Symbol letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color, unsigned char alpha)
 {
-    unsigned int letterIndex = letter * FONT_HEIGHT;
+    unsigned int letterIndex = letter * RF_FONTHEIGHT;
 
-    for (unsigned int height = 0; height < FONT_HEIGHT; height++)
+    for (unsigned int height = 0; height < RF_FONTHEIGHT; height++)
     {
         unsigned char rowData = appData->fontData[letterIndex + height];
 
-        for (unsigned int width = 0; width < FONT_WIDTH; width++)
+        for (unsigned int width = 0; width < RF_FONTWIDTH; width++)
         {
             if ((rowData >> (8 - width - 1) & 1) == 1)
             {
-                for (unsigned int wScale = 0; wScale < scale; wScale++)
+                for (unsigned int hScale = 0; hScale < scale; hScale++)
                 {
-                    for (unsigned int hScale = 0; hScale < scale; hScale++)
+                    for (unsigned int wScale = 0; wScale < scale; wScale++)
                     {
                         PixelData_t pixelData = { {wScale + width * scale + x, hScale + height * scale + y}, color, alpha };
                         updatePixel(appData, pixelData);
@@ -93,9 +94,9 @@ void drawLetter(AppData_t* appData, eLetters_t letter, unsigned int x, unsigned 
             }
             else
             {
-                for (unsigned int wScale = 0; wScale < scale; wScale++)
+                for (unsigned int hScale = 0; hScale < scale; hScale++)
                 {
-                    for (unsigned int hScale = 0; hScale < scale; hScale++)
+                    for (unsigned int wScale = 0; wScale < scale; wScale++)
                     {
                         PixelData_t pixelData = { {wScale + width * scale + x, hScale + height * scale + y}, BLACK, 255 };
                         updatePixel(appData, pixelData);

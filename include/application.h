@@ -6,10 +6,17 @@
 #define CHIP8_INTERPRETER_APPLICATION_H
 
 #include "common.h"
+#include "chip8.h"
+#include "menu.h"
 
 #define FPS 60
 #define DESIRED_DELTA_TIME 1000.f/(float) FPS
-#define DEFAULT_RENDER_SCALE 20
+#define CHIP8_RENDER_SCALE 20
+#define MENU_RENDER_SCALE 4
+#define APPLICATION_WIDTH 1280
+#define APPLICATION_HEIGHT 640
+
+typedef struct MenuData MenuData_t;
 
 typedef enum Screen
 {
@@ -23,8 +30,8 @@ typedef enum Color
 
 typedef struct Position
 {
-    unsigned char x;
-    unsigned char y;
+    unsigned int x;
+    unsigned int y;
 } Position_t;
 
 typedef struct PixelData
@@ -36,7 +43,7 @@ typedef struct PixelData
 
 typedef struct UpdateTracker
 {
-    PixelData_t pixels[WIDTH * HEIGHT * DEFAULT_RENDER_SCALE * DEFAULT_RENDER_SCALE];
+    PixelData_t pixels[CHIP8_WIDTH * CHIP8_HEIGHT * CHIP8_RENDER_SCALE * CHIP8_RENDER_SCALE];
     unsigned int updateCounter;
 } UpdateTracker_t;
 
@@ -53,7 +60,8 @@ typedef struct AppData
     Chip8_t* pChip8;
     WindowData_t* windowData;
     unsigned char* fontData;
-    unsigned char display[WIDTH * DEFAULT_RENDER_SCALE][HEIGHT * DEFAULT_RENDER_SCALE];
+    unsigned char display[CHIP8_WIDTH * CHIP8_RENDER_SCALE][CHIP8_HEIGHT * CHIP8_RENDER_SCALE];
+    MenuData_t menuData;
 } AppData_t;
 
 void setRendererColor(SDL_Renderer* renderer, eColor_t color, unsigned char alpha);
@@ -61,7 +69,7 @@ void clearScreen(AppData_t* appData);
 void updatePixel(AppData_t* appData, PixelData_t pixelData);
 void drawDisplay(WindowData_t* windowData);
 void changeResolution(WindowData_t* windowData);
-void drawLetter(AppData_t* appData, eLetters_t letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color, unsigned char alpha);
+void drawLetter(AppData_t* appData, enum Symbol letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color, unsigned char alpha);
 
 
 #endif //CHIP8_INTERPRETER_APPLICATION_H

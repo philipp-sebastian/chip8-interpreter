@@ -348,8 +348,8 @@ int drw_draw_sprite(AppData_t* appData, InstructionData_t *instructionData)
         return -1;
     }
 
-    unsigned char x = appData->pChip8->gpr[instructionData->x] % WIDTH;
-    unsigned char y = appData->pChip8->gpr[instructionData->y] % HEIGHT;
+    unsigned char x = appData->pChip8->gpr[instructionData->x] % CHIP8_WIDTH;
+    unsigned char y = appData->pChip8->gpr[instructionData->y] % CHIP8_HEIGHT;
     unsigned char collision = 0;
 
     appData->pChip8->gpr[VF] = 0;
@@ -358,7 +358,7 @@ int drw_draw_sprite(AppData_t* appData, InstructionData_t *instructionData)
         unsigned char fetchedByte = appData->pChip8->memory[appData->pChip8->indexRegister + row];
 
         //sprite is clipping, if out of bounce
-        if ((y + row) >= HEIGHT)
+        if ((y + row) >= CHIP8_HEIGHT)
         {
             break;
         }
@@ -367,7 +367,7 @@ int drw_draw_sprite(AppData_t* appData, InstructionData_t *instructionData)
         for (int bit = 0; bit < BYTESIZE; bit++) {
 
             //sprite is clipping, if out of bounce
-            if ((x + bit) >= WIDTH)
+            if ((x + bit) >= CHIP8_WIDTH)
             {
                 break;
             }

@@ -8,7 +8,10 @@
 #include <time.h>
 #include <SDL3/SDL.h>
 
-#include "fontdata.h"
+#define RETROFONT_C
+#include "RetroFont.h"
+
+#include "application.h"
 #include "chip8.h"
 #include "cpu.h"
 #include "display.h"
@@ -16,7 +19,6 @@
 #include "main.h"
 #include "timer.h"
 #include "instructions.h"
-#include "application.h"
 #include "menu.h"
 
 #endif // CHIP8_INTERPRETER_COMMON_H

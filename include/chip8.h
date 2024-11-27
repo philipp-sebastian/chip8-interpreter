@@ -3,11 +3,11 @@
 
 #include "common.h"
 
-#define WIDTH 64
-#define HEIGHT 32
 #define STACKSIZE 16
 #define MEMORYSIZE 4096
 #define STARTGAMEMEMORY 0x200
+#define CHIP8_WIDTH 64
+#define CHIP8_HEIGHT 32
 
 typedef enum GprRegisters
 {
@@ -25,7 +25,7 @@ typedef struct Stack
 typedef struct Chip8 {
     unsigned char memory[MEMORYSIZE]; //TODO: signed or unsigned char?
     uint16_t programCounter;
-    unsigned char display[WIDTH][HEIGHT];
+    unsigned char display[CHIP8_WIDTH][CHIP8_HEIGHT];
     uint16_t indexRegister;
     Stack_t stack;
     unsigned char delayTimer;
