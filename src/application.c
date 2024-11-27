@@ -13,6 +13,12 @@ void setRendererColor(SDL_Renderer* renderer, eColor_t color, unsigned char alph
         case WHITE:
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, alpha);
             break;
+        case RED:
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, alpha);
+            break;
+        case GREEN:
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, alpha);
+            break;
     }
 }
 

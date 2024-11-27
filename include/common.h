@@ -11,6 +11,10 @@
 #define RETROFONT_C
 #include "RetroFont.h"
 
+typedef enum Bool
+{
+    FALSE, TRUE
+} Bool;
 
 typedef struct Position
 {

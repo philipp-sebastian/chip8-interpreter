@@ -7,7 +7,10 @@
 
 #include "common.h"
 #include "chip8.h"
+#include "application.h"
 
-int loadGame(Chip8_t* pChip8, const char* filePath);
+typedef struct AppData AppData_t;
+
+int loadGame(AppData_t* appData, const char* filePath);
 
 #endif //CHIP8_INTERPRETER_LOADGAME_H

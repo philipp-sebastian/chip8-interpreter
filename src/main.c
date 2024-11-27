@@ -34,6 +34,8 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
     data->fontData = fontData;
     data->menuData = menuData;
 
+    data->hasProgram = FALSE; //TODO: Fetch from configfile
+
     if (data->windowData == NULL)
     {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "windowdata is null\n");
@@ -43,6 +45,11 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
     {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Unable to create Window and Renderer\n");
         return SDL_APP_FAILURE;
+    }
+
+    if (!SDL_SetRenderDrawBlendMode(data->windowData->renderer, SDL_BLENDMODE_BLEND))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_ERROR, "%s\n", SDL_GetError());
     }
 
     clearScreen(data);

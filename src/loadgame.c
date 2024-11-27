@@ -4,9 +4,9 @@
 
 #include "../include/loadgame.h"
 
-int loadGame(Chip8_t* pChip8, const char* filePath)
+int loadGame(AppData_t* appData, const char* filePath)
 {
-    if (pChip8 == NULL)
+    if (appData->pChip8 == NULL)
     {
         return -1;
     }
@@ -30,7 +30,7 @@ int loadGame(Chip8_t* pChip8, const char* filePath)
         return -1;
     }
 
-    size_t readBytes = fread((void*) (pChip8->memory + STARTGAMEMEMORY), sizeof(char), rom_len, fileHandle);
+    size_t readBytes = fread((void*) (appData->pChip8->memory + STARTGAMEMEMORY), sizeof(char), rom_len, fileHandle);
 
     if (readBytes != rom_len)
     {
@@ -40,6 +40,11 @@ int loadGame(Chip8_t* pChip8, const char* filePath)
     }
 
     fclose(fileHandle);
+
+    appData->hasProgram = TRUE;
+
+    updateGameInMemoryIndicator(appData);
+    updateStartGameText(appData);
 
 //    printf("%d Romlen: %d\n", (int) readBytes, (int) rom_len);
 //    for (size_t i = 0; i < rom_len; i++)

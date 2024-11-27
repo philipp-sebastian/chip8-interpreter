@@ -27,11 +27,15 @@ typedef struct SelectedItem
 typedef struct MenuData
 {
     SelectedItem_t selection;
+    Position_t gameInMemoryIndicator;
+    Position_t startGamePosition;
 } MenuData_t;
 
 void loadMenu(AppData_t* appData);
 void drawMenuSelection(AppData_t* appData);
 SDL_AppResult MenuEventHandler(AppData_t* appData, SDL_Event* event);
-void(*openFileHandler)(void *, const char *const *, int);
+void updateGameInMemoryIndicator(AppData_t* appData);
+void updateStartGameText(AppData_t* appData);
+void openFileHandler(void *userdata, const char *const *fileList, int filter);
 
 #endif //CHIP8_INTERPRETER_MENU_H

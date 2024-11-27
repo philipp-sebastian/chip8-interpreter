@@ -25,54 +25,70 @@ void drawMenuSelection(AppData_t *appData) {
                           ((maxRows / 2) * heightFactor);
 
     unsigned int currentX = startX;
-    //unsigned int currentY = startY;
+    unsigned int currentY = startY;
 
     for (int i = 0; i < 4; i++) //TODO Makros
     {
         appData->menuData->selection.positions[i].x = startX - widthFactor;
-        appData->menuData->selection.positions[i].y = startY + i * heightFactor;
+        appData->menuData->selection.positions[i].y = currentY + i * heightFactor;
     }
 
-    drawLetter(appData, RF_DOT, appData->menuData->selection.positions[appData->menuData->selection.selectedItem].x,
-               appData->menuData->selection.positions[appData->menuData->selection.selectedItem].y, FONT_SCALE_FACTOR, WHITE, 255);
+
+    enum MenuSelection indicatorStart = START_GAME;
+    if (appData->hasProgram == FALSE) {
+        indicatorStart = LOAD_GAME;
+        appData->menuData->selection.selectedItem++;
+    }
+
+    drawLetter(appData, RF_DOT, appData->menuData->selection.positions[indicatorStart].x,
+               appData->menuData->selection.positions[indicatorStart].y, FONT_SCALE_FACTOR, WHITE, 255);
+
 
     int symbolBuf[10];
     StringToSymbols("START GAME", symbolBuf, sizeof(symbolBuf)); //TODO: Change in lib
 
+    appData->menuData->startGamePosition.x = currentX;
+    appData->menuData->startGamePosition.y = currentY;
+
     for (int i = 0; i < strlen("START GAME"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, startY, FONT_SCALE_FACTOR, WHITE, 255);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, 70);
         currentX += widthFactor;
     }
 
+    appData->menuData->gameInMemoryIndicator.x = currentX + widthFactor / 2;
+    appData->menuData->gameInMemoryIndicator.y = currentY;
+
     currentX = startX;
-    startY += heightFactor;
+    currentY += heightFactor;
 
     StringToSymbols("LOAD GAME", symbolBuf, sizeof(symbolBuf));
 
     for (int i = 0; i < strlen("LOAD GAME"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, startY, FONT_SCALE_FACTOR, WHITE, 255);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, 255);
         currentX += widthFactor;
     }
 
     currentX = startX;
-    startY += heightFactor;
+    currentY += heightFactor;
 
     StringToSymbols("OPTIONS", symbolBuf, sizeof(symbolBuf));
 
     for (int i = 0; i < strlen("OPTIONS"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, startY, FONT_SCALE_FACTOR, WHITE, 255);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, 255);
         currentX += widthFactor;
     }
 
     currentX = startX;
-    startY += heightFactor;
+    currentY += heightFactor;
 
     StringToSymbols("EXIT", symbolBuf, sizeof(symbolBuf));
 
     for (int i = 0; i < strlen("EXIT"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, startY, FONT_SCALE_FACTOR, WHITE, 255);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, 255);
         currentX += widthFactor;
     }
+
+    updateGameInMemoryIndicator(appData);
 }
 
 SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
@@ -82,7 +98,7 @@ SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
     }
 
     const SDL_DialogFileFilter filters[] = {
-            {"Chip8-Game", "ch8"}
+            {"Chip8-Game", "ch8"} //TODO: Accept more files??
     };
 
     switch (event->type) {
@@ -102,7 +118,8 @@ SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
                     break;
                 case SDLK_W:
                 case SDLK_UP:
-                    if (appData->menuData->selection.selectedItem > 0) {
+                    if (appData->menuData->selection.selectedItem > 0 &&
+                        !(appData->menuData->selection.selectedItem == LOAD_GAME && appData->hasProgram == FALSE)) {
                         Position_t position;
                         position = appData->menuData->selection.positions[appData->menuData->selection.selectedItem];
                         drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_FACTOR, BLACK, 255);
@@ -116,8 +133,8 @@ SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
                         case START_GAME:
                             break;
                         case LOAD_GAME:
-
-                            SDL_ShowOpenFileDialog(openFileHandler, NULL ,appData->windowData->window, filters, 1, "../games", 0);
+                            SDL_ShowOpenFileDialog(openFileHandler, appData, appData->windowData->window, filters, 1,
+                                                   "../games", 0);
                             break;
                         case OPTIONS:
                             break;
@@ -130,30 +147,55 @@ SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
     return SDL_APP_CONTINUE;
 }
 
-void(*openFileHandler)(void * userdata, const char *const * fileList, int filter)
-{
-    AppData_t* data = (AppData_t*) userdata;
+void updateGameInMemoryIndicator(AppData_t *appData) {
+    eColor_t color = RED;
 
-    if (data == NULL)
-    {
+    if (appData->hasProgram == TRUE) {
+        color = GREEN;
+    }
+
+    drawLetter(appData, RF_DOT, appData->menuData->gameInMemoryIndicator.x, appData->menuData->gameInMemoryIndicator.y,
+               FONT_SCALE_FACTOR, color, 255);
+}
+
+void updateStartGameText(AppData_t *appData) {
+    unsigned int spaceBetween = 2 * FONT_SCALE_FACTOR;
+    unsigned int widthFactor = RF_FONTWIDTH * FONT_SCALE_FACTOR + spaceBetween;
+
+    unsigned int currentX = appData->menuData->startGamePosition.x;
+    unsigned int currentY = appData->menuData->startGamePosition.y;
+
+    int symbolBuf[10];
+    StringToSymbols("START GAME", symbolBuf, sizeof(symbolBuf));
+    unsigned char alpha = 255;
+
+    if (appData->hasProgram == FALSE) {
+       alpha = 70;
+    }
+    for (int i = 0; i < strlen("START GAME"); i++) {
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, alpha);
+        currentX += widthFactor;
+    }
+}
+
+void openFileHandler(void *userdata, const char *const *fileList, int filter) {
+    AppData_t *data = (AppData_t *) userdata;
+
+    if (data == NULL) {
         return;
     }
 
-    if (fileList == NULL)
-    {
-        if (filter == -1)
-        {
+    if (fileList == NULL) {
+        if (filter == -1) {
             SDL_Log("File format is not supported");
-        }
-        else
-        {
+        } else {
             SDL_Log("Error or dialog was cancelled");
         }
 
         return;
     }
 
-    loadGame(data->pChip8, *fileList);
+    loadGame(data, *fileList);
 
 }
 
