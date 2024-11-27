@@ -1,4 +1,4 @@
-#include "../include/common.h"
+#include "../include/display.h"
 
 void initializeFontData(Chip8_t* pChip8)
 {

@@ -2,6 +2,7 @@
 #define CHIP8_INTERPRETER_CHIP8_H
 
 #include "common.h"
+#include "display.h"
 
 #define STACKSIZE 16
 #define MEMORYSIZE 4096

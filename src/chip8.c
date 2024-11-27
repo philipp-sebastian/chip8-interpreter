@@ -1,4 +1,4 @@
-#include "../include/common.h"
+#include "../include/chip8.h"
 
 Chip8_t* initializeComponents(void)
 {

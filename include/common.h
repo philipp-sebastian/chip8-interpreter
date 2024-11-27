@@ -11,14 +11,11 @@
 #define RETROFONT_C
 #include "RetroFont.h"
 
-#include "application.h"
-#include "chip8.h"
-#include "cpu.h"
-#include "display.h"
-#include "input.h"
-#include "main.h"
-#include "timer.h"
-#include "instructions.h"
-#include "menu.h"
+
+typedef struct Position
+{
+    unsigned int x;
+    unsigned int y;
+} Position_t;
 
 #endif // CHIP8_INTERPRETER_COMMON_H

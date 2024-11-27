@@ -6,6 +6,9 @@
 #define CHIP8_INTERPRETER_CPU_H
 
 #include "common.h"
+#include "chip8.h"
+#include "application.h"
+#include "instructions.h"
 
 typedef struct InstructionData {
    unsigned char x;

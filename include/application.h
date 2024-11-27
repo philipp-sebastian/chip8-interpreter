@@ -28,11 +28,6 @@ typedef enum Color
     BLACK, WHITE
 } eColor_t;
 
-typedef struct Position
-{
-    unsigned int x;
-    unsigned int y;
-} Position_t;
 
 typedef struct PixelData
 {

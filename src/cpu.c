@@ -1,4 +1,5 @@
-#include "../include/common.h"
+#include "../include/cpu.h"
+
 
 void incrementProgramCounter(Chip8_t* pChip8)
 {

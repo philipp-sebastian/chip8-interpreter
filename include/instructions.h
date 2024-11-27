@@ -2,10 +2,13 @@
 #define CHIP8_INTERPRETER_INSTRUCTIONS_H
 
 #include "common.h"
-
-typedef struct AppData AppData_t;
+#include "chip8.h"
+#include "application.h"
+#include "cpu.h"
 
 #define BYTESIZE 8
+
+typedef struct InstructionData InstructionData_t;
 
 int sys_jump_to_addr(Chip8_t* pChip8, InstructionData_t* instructionData);
 int cls_clear_display(Chip8_t* pChip8, InstructionData_t* instructionData);

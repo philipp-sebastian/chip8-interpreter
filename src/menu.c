@@ -2,7 +2,7 @@
 // Created by Sebastian on 25.11.24.
 //
 
-#include "../include/common.h"
+#include "../include/menu.h"
 
 void loadMenu(AppData_t *appData) {
     appData->windowData->currentScreen = MENU;

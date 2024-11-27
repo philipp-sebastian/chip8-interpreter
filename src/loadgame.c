@@ -2,7 +2,7 @@
 // Created by Sebastian on 15.11.24.
 //
 
-#include "../include/common.h"
+#include "../include/loadgame.h"
 
 int loadGame(Chip8_t* pChip8)
 {

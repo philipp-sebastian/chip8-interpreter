@@ -6,6 +6,7 @@
 #define CHIP8_INTERPRETER_LOADGAME_H
 
 #include "common.h"
+#include "chip8.h"
 
 int loadGame(Chip8_t* pChip8);
 

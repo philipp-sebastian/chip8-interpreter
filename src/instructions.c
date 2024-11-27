@@ -1,4 +1,4 @@
-#include "../include/common.h"
+#include "../include/instructions.h"
 
 int sys_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
 {

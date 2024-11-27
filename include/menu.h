@@ -6,11 +6,11 @@
 #define CHIP8_INTERPRETER_MENU_H
 
 #include "common.h"
+#include "application.h"
 
 #define FONT_SCALE_FACTOR 2
 
-typedef struct AppData AppData_t; // Forward declaration of AppData_t
-typedef struct Position Position_t;
+typedef struct AppData AppData_t;
 
 typedef enum MenuSelection
 {

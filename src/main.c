@@ -1,4 +1,15 @@
+#include "../include/application.h"
+#include "../include/chip8.h"
 #include "../include/common.h"
+#include "../include/cpu.h"
+#include "../include/display.h"
+#include "../include/input.h"
+#include "../include/instructions.h"
+#include "../include/loadgame.h"
+#include "../include/main.h"
+#include "../include/menu.h"
+#include "../include/timer.h"
+
 #include "SDL3/SDL_main.h"
 
 SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
