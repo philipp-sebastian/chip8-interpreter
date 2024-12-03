@@ -65,6 +65,10 @@ SDL_AppResult SDL_AppIterate(void* appData)
 
     //framerate
     Uint64 frameStart = SDL_GetTicks();
+    if (data->windowData->currentScreen == CHIP8)
+    {
+        fetchDecodeCycle(data);
+    }
     drawDisplay(data->windowData);
     Uint64 frameEnd = SDL_GetTicks();
 
@@ -93,7 +97,7 @@ SDL_AppResult SDL_AppEvent(void* appData, SDL_Event* event)
 
     switch (data->windowData->currentScreen) {
         case CHIP8:
-            break;
+            return chip8EventHandler(data, event);
         case OPTION:
             break;
         case MENU:

@@ -8,7 +8,15 @@ void loadMenu(AppData_t *appData) {
     appData->windowData->currentScreen = MENU;
     appData->menuData->selection.selectedItem = START_GAME;
     changeResolution(appData->windowData);
+    clearScreen(appData);
     drawMenuSelection(appData);
+}
+
+void loadChip8(AppData_t* appData)
+{
+    appData->windowData->currentScreen = CHIP8;
+    changeResolution(appData->windowData);
+    clearScreen(appData);
 }
 
 void drawMenuSelection(AppData_t *appData) {
@@ -92,9 +100,11 @@ void drawMenuSelection(AppData_t *appData) {
 }
 
 SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
+    if (event->type == SDL_EVENT_KEY_DOWN) {
     switch (event->key.key) {
         case SDLK_ESCAPE:
             return SDL_APP_SUCCESS;
+    }
     }
 
     const SDL_DialogFileFilter filters[] = {
@@ -132,12 +142,14 @@ SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
                 case SDLK_RETURN:
                     switch (appData->menuData->selection.selectedItem) {
                         case START_GAME:
+                            loadChip8(appData);
                             break;
                         case LOAD_GAME:
 #ifdef _WIN32
-    nfilters = 0; //Because windows does not support the filters
+                            nfilters = 0; //Because windows does not support the filters
 #endif
-                            SDL_ShowOpenFileDialog(openFileHandler, appData, appData->windowData->window, filters, nfilters,
+                            SDL_ShowOpenFileDialog(openFileHandler, appData, appData->windowData->window, filters,
+                                                   nfilters,
                                                    "../games", 0);
 
                             break;
@@ -182,7 +194,7 @@ void updateStartGameText(AppData_t *appData) {
     currentY = appData->menuData->startGamePosition.y;
 
     if (appData->hasProgram == FALSE) {
-       alpha = 70;
+        alpha = 70;
     }
     for (int i = 0; i < strlen("START GAME"); i++) {
         drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, alpha);
@@ -206,11 +218,10 @@ void openFileHandler(void *userdata, const char *const *fileList, int filter) {
         return;
     }
 
-    const char* filePath = *fileList;
+    const char *filePath = *fileList;
     size_t length = strlen(filePath);
 
-    if (strcmp((char*)filePath + length - 4, ".ch8") != 0)
-    {
+    if (strcmp((char *) filePath + length - 4, ".ch8") != 0) {
         SDL_Log("Tried to load: %s", filePath);
         SDL_Log("Invalid file format. Supported is .ch8.");
         data->hasProgram = FALSE;
@@ -218,7 +229,6 @@ void openFileHandler(void *userdata, const char *const *fileList, int filter) {
         updateGameInMemoryIndicator(data);
         return;
     }
-
 
 
     loadGame(data, filePath);

@@ -32,6 +32,7 @@ typedef struct MenuData
 } MenuData_t;
 
 void loadMenu(AppData_t* appData);
+void loadChip8(AppData_t* appData);
 void drawMenuSelection(AppData_t* appData);
 SDL_AppResult MenuEventHandler(AppData_t* appData, SDL_Event* event);
 void updateGameInMemoryIndicator(AppData_t* appData);

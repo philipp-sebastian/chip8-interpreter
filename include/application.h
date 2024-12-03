@@ -66,6 +66,6 @@ void updatePixel(AppData_t* appData, PixelData_t pixelData);
 void drawDisplay(WindowData_t* windowData);
 void changeResolution(WindowData_t* windowData);
 void drawLetter(AppData_t* appData, enum Symbol letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color, unsigned char alpha);
-
+SDL_AppResult chip8EventHandler(AppData_t* appData, SDL_Event* event);
 
 #endif //CHIP8_INTERPRETER_APPLICATION_H

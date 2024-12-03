@@ -21,15 +21,11 @@ typedef struct InstructionData {
 //TODO: Define Makros for Opcode => Return Numbers
 //TODO: Implement Functionpointer Array => Indices are the previous defined Makros
 
-//fetch function
-
-//decode function
-
-//execute function
-
 void incrementProgramCounter(Chip8_t* pChip8);
 void setProgramCounter(Chip8_t* pChip8, const uint16_t* address);
 uint16_t fetch(Chip8_t* pChip8);
+void decode(AppData_t* appData, uint16_t instruction);
+void fetchDecodeCycle(AppData_t* appData);
 
 #endif //CHIP8_INTERPRETER_CPU_H
 
