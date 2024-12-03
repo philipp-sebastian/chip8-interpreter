@@ -46,6 +46,8 @@ int loadGame(AppData_t* appData, const char* filePath)
     updateGameInMemoryIndicator(appData);
     updateStartGameText(appData);
 
+    strcpy(appData->filePath.path, filePath);
+    appData->filePath.pathLength = strlen(filePath); //TODO necessary?
 //    printf("%d Romlen: %d\n", (int) readBytes, (int) rom_len);
 //    for (size_t i = 0; i < rom_len; i++)
 //    {

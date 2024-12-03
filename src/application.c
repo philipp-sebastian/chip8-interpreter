@@ -106,6 +106,7 @@ SDL_AppResult chip8EventHandler(AppData_t *appData, SDL_Event *event) {
         switch (event->key.key) {
             case SDLK_ESCAPE:
                 loadMenu(appData);
+                resetChip8(appData);
                 return SDL_APP_CONTINUE;
         }
     }

@@ -1,4 +1,5 @@
 #include "../include/chip8.h"
+#include "../include/application.h"
 
 Chip8_t* initializeComponents(void)
 {
@@ -31,4 +32,15 @@ void freeComponents(Chip8_t* pChip8)
     free(pChip8);
     pChip8 = NULL;
     printf("Freed allocated Chip8 Components in Heap");
+}
+
+void resetChip8(AppData_t* appData)
+{
+    clearScreen(appData);
+    memset(appData->pChip8->gpr, 0, sizeof (appData->pChip8->gpr));
+    appData->pChip8->programCounter = STARTGAMEMEMORY;
+    appData->pChip8->indexRegister = 0;
+    appData->pChip8->stack.stackPointer = 0;
+    memset(appData->pChip8->memory + STARTGAMEMEMORY, 0, MEMORYSIZE - STARTGAMEMEMORY);
+    loadGame(appData, appData->filePath.path);
 }

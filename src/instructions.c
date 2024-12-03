@@ -2,6 +2,7 @@
 
 int sys_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
 {
+
     return jp_jump_to_addr(pChip8, instructionData);
 }
 
@@ -51,11 +52,12 @@ int call_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData)
 
     if (pChip8->stack.stackPointer >= STACKSIZE)
     {
-        printf("Error: Stackoverflow\n");
+        SDL_Log("Error: Stackoverflow");
         return -1;
     }
 
-    pChip8->stack.stackMemory[pChip8->stack.stackPointer] = instructionData->nnn;
+    pChip8->stack.stackMemory[pChip8->stack.stackPointer] = pChip8->programCounter;
+    pChip8->programCounter = instructionData->nnn;
     pChip8->stack.stackPointer++;
 
     return 0;
@@ -264,7 +266,7 @@ int shl_shift_left_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    pChip8->gpr[VF] = pChip8->gpr[instructionData->x] & 0x80;
+    pChip8->gpr[VF] = (pChip8->gpr[instructionData->x] & 0x80) >> 7;
     pChip8->gpr[instructionData->x] <<= 1;
 
     return 0;

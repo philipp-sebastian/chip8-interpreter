@@ -10,6 +10,8 @@
 #define CHIP8_WIDTH 64
 #define CHIP8_HEIGHT 32
 
+typedef struct AppData AppData_t;
+
 typedef enum GprRegisters
 {
    V0, V1, V2, V3, V4, V5, V6, V7, V8, V9, VA, VB, VC, VD, VE, VF
@@ -36,6 +38,7 @@ typedef struct Chip8 {
 
 Chip8_t* initializeComponents(void);
 void freeComponents(Chip8_t* pChip8);
+void resetChip8(AppData_t* appData);
 
 #endif //CHIP8_INTERPRETER_CHIP8_H
 

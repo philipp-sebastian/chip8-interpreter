@@ -28,6 +28,10 @@ typedef enum Color
     BLACK, WHITE, RED, GREEN
 } eColor_t;
 
+typedef struct FilePath {
+    char path[256];
+    unsigned int pathLength;
+}FilePath_t;
 
 typedef struct PixelData
 {
@@ -58,6 +62,7 @@ typedef struct AppData
     unsigned char display[CHIP8_WIDTH * CHIP8_RENDER_SCALE][CHIP8_HEIGHT * CHIP8_RENDER_SCALE];
     MenuData_t* menuData;
     Bool hasProgram; //TODO: Save in Configtextfile
+    FilePath_t filePath;
 } AppData_t;
 
 void setRendererColor(SDL_Renderer* renderer, eColor_t color, unsigned char alpha);
