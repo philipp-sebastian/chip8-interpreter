@@ -189,6 +189,7 @@ int add_add_vx_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
     }
 
     unsigned int result = pChip8->gpr[instructionData->x] + pChip8->gpr[instructionData->y];
+    pChip8->gpr[instructionData->x] = (result & 0xFF);
 
     if (result > 255)
     {
@@ -198,8 +199,6 @@ int add_add_vx_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
     {
         pChip8->gpr[VF] = 0;
     }
-
-    pChip8->gpr[instructionData->x] = (result & 0xFF);
 
     return 0;
 }
@@ -211,16 +210,23 @@ int sub_vx_minus_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    if (pChip8->gpr[instructionData->x] > pChip8->gpr[instructionData->y])
+    unsigned char VF_Result = 0;
+
+    if (pChip8->gpr[instructionData->x] >= pChip8->gpr[instructionData->y])
     {
-        pChip8->gpr[VF] = 1;
-    }
-    else
-    {
-        pChip8->gpr[VF] = 0;
+        VF_Result = 1;
     }
 
     pChip8->gpr[instructionData->x] = pChip8->gpr[instructionData->x] - pChip8->gpr[instructionData->y];
+
+    if (VF_Result == 0)
+    {
+        pChip8->gpr[VF] = 0;
+    }
+    else
+    {
+        pChip8->gpr[VF] = 1;
+    }
 
     return 0;
 }
@@ -245,6 +251,8 @@ int subn_vy_minus_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
+    pChip8->gpr[instructionData->x] = pChip8->gpr[instructionData->y] - pChip8->gpr[instructionData->x];
+
     if (pChip8->gpr[instructionData->y] > pChip8->gpr[instructionData->x])
     {
         pChip8->gpr[VF] = 1;
@@ -253,8 +261,6 @@ int subn_vy_minus_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
     {
         pChip8->gpr[VF] = 0;
     }
-
-    pChip8->gpr[instructionData->x] = pChip8->gpr[instructionData->y] - pChip8->gpr[instructionData->x];
 
     return 0;
 }
