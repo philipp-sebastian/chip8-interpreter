@@ -42,5 +42,5 @@ void resetChip8(AppData_t* appData)
     appData->pChip8->indexRegister = 0;
     appData->pChip8->stack.stackPointer = 0;
     memset(appData->pChip8->memory + STARTGAMEMEMORY, 0, MEMORYSIZE - STARTGAMEMEMORY);
-    loadGame(appData, appData->filePath.path);
+    loadGame(appData, appData->filePath.path); //TODO: Fix on Mac!
 }

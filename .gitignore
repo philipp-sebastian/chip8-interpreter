@@ -11,7 +11,7 @@ CMakeCache.txt
 *.obj
 
 #Other files
-/games/*
+#/games/*
 
 # macOS specific
 .DS_Store
