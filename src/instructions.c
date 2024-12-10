@@ -238,8 +238,9 @@ int shr_shift_right_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    pChip8->gpr[VF] = pChip8->gpr[instructionData->x] & 0x1;
+    unsigned char VF_Result = pChip8->gpr[instructionData->x] & 0x1;
     pChip8->gpr[instructionData->x] >>= 1;
+    pChip8->gpr[VF] = VF_Result;
 
     return 0;
 }
@@ -272,8 +273,9 @@ int shl_shift_left_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    pChip8->gpr[VF] = (pChip8->gpr[instructionData->x] & 0x80) >> 7;
+    unsigned char VF_Result = (pChip8->gpr[instructionData->x] & 0x80) >> 7;
     pChip8->gpr[instructionData->x] <<= 1;
+    pChip8->gpr[VF] = VF_Result;
 
     return 0;
 }
