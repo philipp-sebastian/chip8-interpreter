@@ -1,11 +1,12 @@
 //
 // Created by meyer on 10.12.2024.
 //
-#include "common.h"
-#include "application.h"
-
 #ifndef CHIP8_INTERPRETER_CONFIGHANDLER_H
 #define CHIP8_INTERPRETER_CONFIGHANDLER_H
+
+#include "common.h"
+
+typedef struct AppData AppData_t;
 
 typedef enum KeyID {
     KEYID_1 = 0, KEYID_2 = 1, KEYID_3 = 2, KEYID_C = 3, KEYID_4 = 4,

@@ -1,5 +1,5 @@
-#include "../include/configHandler.h"
 #include "../include/application.h"
+#include "../include/configHandler.h"
 #include "../include/chip8.h"
 #include "../include/common.h"
 #include "../include/cpu.h"

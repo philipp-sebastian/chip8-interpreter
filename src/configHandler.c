@@ -3,6 +3,7 @@
 //
 
 #include "configHandler.h"
+#include "application.h"
 
 int writeConfig(AppData_t* appData)
 {
@@ -26,10 +27,13 @@ int readConfig(AppData_t* appData)
     FILE* file = fopen("config", "rb");
     if (file == NULL)
     {
+        SDL_Log("Creating config file");
         initKeyMap(appData);
         writeConfig(appData);
         return 1;
     }
+
+    SDL_Log("reading from config file");
 
     fread(&appData->config, sizeof (Config_t), 1, file);
 
@@ -39,7 +43,7 @@ int readConfig(AppData_t* appData)
 
 }
 
-int initkeyMap(AppData_t* appData)
+int initKeyMap(AppData_t* appData)
 {
     appData->config.keyMap.mapping[KEYID_1] = SDLK_1;
     appData->config.keyMap.mapping[KEYID_2] = SDLK_2;
