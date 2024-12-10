@@ -8,6 +8,7 @@
 #include "common.h"
 #include "chip8.h"
 #include "menu.h"
+#include "configHandler.h"
 
 #define FPS 60
 #define DESIRED_DELTA_TIME 1000.f/(float) FPS
@@ -63,6 +64,7 @@ typedef struct AppData
     MenuData_t* menuData;
     Bool hasProgram; //TODO: Save in Configtextfile
     FilePath_t filePath;
+    Config_t config;
 } AppData_t;
 
 void setRendererColor(SDL_Renderer* renderer, eColor_t color, unsigned char alpha);

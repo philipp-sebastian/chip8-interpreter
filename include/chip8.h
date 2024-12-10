@@ -34,6 +34,7 @@ typedef struct Chip8 {
     unsigned char delayTimer;
     unsigned char soundTimer;
     unsigned char gpr[16];
+    unsigned char inputMap[16];
 } Chip8_t;
 
 Chip8_t* initializeComponents(void);

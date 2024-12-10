@@ -1,3 +1,4 @@
+#include "../include/configHandler.h"
 #include "../include/application.h"
 #include "../include/chip8.h"
 #include "../include/common.h"
@@ -11,6 +12,7 @@
 #include "../include/timer.h"
 
 #include "SDL3/SDL_main.h"
+
 
 SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
 {
@@ -34,6 +36,8 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
     data->fontData = fontData;
     data->menuData = menuData;
 
+    readConfig(data);
+
     data->hasProgram = FALSE; //TODO: Fetch from configfile
 
     if (data->windowData == NULL)
@@ -55,6 +59,7 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
     clearScreen(data);
 
     loadMenu(data);
+
 
     return SDL_APP_CONTINUE;
 }
