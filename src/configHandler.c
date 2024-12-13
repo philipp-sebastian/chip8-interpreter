@@ -7,7 +7,7 @@
 
 int writeConfig(AppData_t* appData)
 {
-    FILE* file = fopen("config", "wb+");
+    FILE* file = fopen("config.ini", "wb+");
 
     if (file == NULL)
     {
@@ -15,7 +15,12 @@ int writeConfig(AppData_t* appData)
         return -1;
     }
 
-    fwrite(&appData->config, sizeof(appData->config), 1, file);
+    const char keyNames[] = {"123C456D789EA0BF"};
+
+    for (int i = 0; i <= KEYID_F; i++)
+    {
+        fprintf(file, "Keymap_%c: %c\n", keyNames[i], appData->config.keyMap.mapping[i]);
+    }
 
     fclose(file);
 
@@ -24,7 +29,8 @@ int writeConfig(AppData_t* appData)
 
 int readConfig(AppData_t* appData)
 {
-    FILE* file = fopen("config", "rb");
+    FILE* file = fopen("config.ini", "rb");
+
     if (file == NULL)
     {
         SDL_Log("Creating config file");
@@ -35,7 +41,13 @@ int readConfig(AppData_t* appData)
 
     SDL_Log("reading from config file");
 
-    fread(&appData->config, sizeof (Config_t), 1, file);
+    char dummy[12];
+
+    for (int i = 0; i <= KEYID_F; i++)
+    {
+        fscanf(file, "%11s%u", dummy, &appData->config.keyMap.mapping[i]);
+        SDL_Log("%s, %u, %u", dummy, SDL_GetKeyFromName(appData->config.keyMap.mapping[i]), appData->config.keyMap.mapping[i]);
+    }
 
     fclose(file);
 
