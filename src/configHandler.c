@@ -19,7 +19,7 @@ int writeConfig(AppData_t* appData)
 
     for (int i = 0; i <= KEYID_F; i++)
     {
-        fprintf(file, "Keymap_%c: %c\n", keyNames[i], appData->config.keyMap.mapping[i]);
+        fprintf(file, "Key_%c: %c\n", keyNames[i], appData->config.keyMap.mapping[i]);
     }
 
     fclose(file);
@@ -42,14 +42,31 @@ int readConfig(AppData_t* appData)
     SDL_Log("reading from config file");
 
     char dummy[12];
+    char key[64];
+    char hasError = 0;
 
     for (int i = 0; i <= KEYID_F; i++)
     {
-        fscanf(file, "%11s%u", dummy, &appData->config.keyMap.mapping[i]);
-        SDL_Log("%s, %u, %u", dummy, SDL_GetKeyFromName(appData->config.keyMap.mapping[i]), appData->config.keyMap.mapping[i]);
+        fscanf(file, "%8s%63s", dummy, key);
+        SDL_Keycode keyCode = SDL_GetKeyFromName(key);
+
+        if (keyCode == SDLK_UNKNOWN)
+        {
+            SDL_Log("Unknown Key at %7s", dummy);
+            keyCode = getDefaultKeyCode(i);
+            hasError = 1;
+        }
+
+        appData->config.keyMap.mapping[i] = keyCode;
+        SDL_Log("%s %s", dummy, SDL_GetKeyName(keyCode));
     }
 
     fclose(file);
+
+    if (hasError)
+    {
+        writeConfig(appData);
+    }
 
     return 0;
 
@@ -76,4 +93,45 @@ int initKeyMap(AppData_t* appData)
 
     return 0;
 }
+
+SDL_Keycode getDefaultKeyCode(unsigned int index)
+{
+    switch (index) {
+        case KEYID_1:
+            return SDLK_1;
+        case KEYID_2:
+            return SDLK_2;
+        case KEYID_3:
+            return SDLK_3;
+        case KEYID_C:
+            return SDLK_4;
+        case KEYID_4:
+            return SDLK_Q;
+        case KEYID_5:
+            return SDLK_W;
+        case KEYID_6:
+            return SDLK_E;
+        case KEYID_D:
+            return SDLK_R;
+        case KEYID_7:
+            return SDLK_A;
+        case KEYID_8:
+            return SDLK_S;
+        case KEYID_9:
+            return SDLK_D;
+        case KEYID_E:
+            return SDLK_F;
+        case KEYID_A:
+            return SDLK_Z;
+        case KEYID_0:
+            return SDLK_X;
+        case KEYID_B:
+            return SDLK_C;
+        case KEYID_F:
+            return SDLK_V;
+        default:
+            return SDLK_UNKNOWN;
+    }
+}
+
 
