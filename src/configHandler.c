@@ -41,24 +41,39 @@ int readConfig(AppData_t* appData)
 
     SDL_Log("reading from config file");
 
-    char dummy[12];
-    char key[64];
+    char line[64];
     char hasError = 0;
 
     for (int i = 0; i <= KEYID_F; i++)
     {
-        fscanf(file, "%8s%63s", dummy, key);
-        SDL_Keycode keyCode = SDL_GetKeyFromName(key);
+        if (fgets(line, sizeof(line), file) == NULL)
+        {
+            SDL_Log("Format error in row %d config.ini", i);
+            appData->config.keyMap.mapping[i] = getDefaultKeyCode(i);
+            writeConfig(appData);
+            return -1;
+        }
+
+        char* pos = strstr(line, ":");
+
+        if (pos == NULL)
+        {
+            SDL_Log("Format error in config.ini");
+            appData->config.keyMap.mapping[i] = getDefaultKeyCode(i);
+            writeConfig(appData);
+            return -1;
+        }
+
+        SDL_Keycode keyCode = SDL_GetKeyFromName(pos);
 
         if (keyCode == SDLK_UNKNOWN)
         {
-            SDL_Log("Unknown Key at %7s", dummy);
             keyCode = getDefaultKeyCode(i);
             hasError = 1;
         }
 
         appData->config.keyMap.mapping[i] = keyCode;
-        SDL_Log("%s %s", dummy, SDL_GetKeyName(keyCode));
+        SDL_Log("%s", SDL_GetKeyName(keyCode));
     }
 
     fclose(file);
