@@ -11,15 +11,20 @@ int writeConfig(AppData_t* appData)
 
     if (file == NULL)
     {
-        SDL_Log("failed to open config file");
+        SDL_Log("Failed to open config.ini");
         return -1;
     }
 
-    const char keyNames[] = {"123C456D789EA0BF"};
+    const char keyNames[] = "123C456D789EA0BF";
 
     for (int i = 0; i <= KEYID_F; i++)
     {
-        fprintf(file, "Key_%c: %c\n", keyNames[i], appData->config.keyMap.mapping[i]);
+        if (fprintf(file, "Key_%c: %c\n", keyNames[i], appData->config.keyMap.mapping[i]) < 0)
+        {
+            SDL_Log("Failed to write to config.ini at line %d", i);
+            fclose(file);
+            return -1;
+        }
     }
 
     fclose(file);
@@ -33,13 +38,13 @@ int readConfig(AppData_t* appData)
 
     if (file == NULL)
     {
-        SDL_Log("Creating config file");
+        SDL_Log("Creating config.ini");
         initKeyMap(appData);
         writeConfig(appData);
         return 1;
     }
 
-    SDL_Log("reading from config file");
+    SDL_Log("Reading from config.ini");
 
     char line[64];
     char hasError = 0;
@@ -48,43 +53,54 @@ int readConfig(AppData_t* appData)
     {
         if (fgets(line, sizeof(line), file) == NULL)
         {
-            SDL_Log("Format error in row %d config.ini", i);
-            appData->config.keyMap.mapping[i] = getDefaultKeyCode(i);
-            writeConfig(appData);
-            return -1;
+            SDL_Log("Couldn't read config.ini because of format error in line: %d", i + 1);
+
+            for (int j = i; j <= KEYID_F; j++)
+            { //Reset all following Keys bcs of format error
+                appData->config.keyMap.mapping[j] = getDefaultKeyCode(j);
+            }
+
+            hasError = 1;
+            break;
         }
 
-        char* pos = strstr(line, ":");
-
+        char* pos = strstr(line, ": ");
+        //TODO: To lower case
         if (pos == NULL)
         {
-            SDL_Log("Format error in config.ini");
+            SDL_Log("Couldn't read line because of format error in line: %d", i + 1);
+
             appData->config.keyMap.mapping[i] = getDefaultKeyCode(i);
-            writeConfig(appData);
-            return -1;
+
+            hasError = 1;
+            continue;
         }
+
+        pos += 2;
+        pos[strcspn(pos, "\r\n")] = 0;
 
         SDL_Keycode keyCode = SDL_GetKeyFromName(pos);
 
         if (keyCode == SDLK_UNKNOWN)
         {
+            SDL_Log("Found unknown key at line %d", i + 1);
             keyCode = getDefaultKeyCode(i);
             hasError = 1;
         }
 
         appData->config.keyMap.mapping[i] = keyCode;
-        SDL_Log("%s", SDL_GetKeyName(keyCode));
+
+        SDL_Log("%c", keyCode);
     }
 
     fclose(file);
 
-    if (hasError)
+    if (hasError == 1)
     {
         writeConfig(appData);
     }
 
     return 0;
-
 }
 
 int initKeyMap(AppData_t* appData)
