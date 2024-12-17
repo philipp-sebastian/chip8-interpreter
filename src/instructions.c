@@ -6,14 +6,15 @@ int sys_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
     return jp_jump_to_addr(pChip8, instructionData);
 }
 
-int cls_clear_display(Chip8_t *pChip8, InstructionData_t *instructionData)
+int cls_clear_display(AppData_t* appData, InstructionData_t *instructionData)
 {
-    if (pChip8 == NULL || instructionData == NULL)
+    if (appData->pChip8 == NULL || instructionData == NULL)
     {
         return -1;
     }
 
-    memset(pChip8->display, 0, sizeof(pChip8->display));
+    memset(appData->pChip8->display, 0, sizeof(appData->pChip8->display));
+    clearScreen(appData);
 
     return 0;
 }
@@ -434,10 +435,10 @@ int skp_skip_if_key_pressed(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
+    SDL_Log("Frägt ab: %d", instructionData->x);
     if (pChip8->inputMap[instructionData->x] == 1)
     {
         incrementProgramCounter(pChip8);
-        SDL_Log("It worked!");
     }
 
     return 0;
@@ -490,19 +491,25 @@ int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    while (1)
+    SDL_Event event;
+
+    while (SDL_WaitEvent(&event))
     {
-        for (int i = KEYID_1; i <= KEYID_F; i++)
+        if (event.type == SDL_EVENT_KEY_DOWN)
         {
-            if (pChip8->inputMap[i] == 1)
+            for (int i = KEYID_1; i <= KEYID_F; i++)
             {
-                pChip8->gpr[instructionData->x] = i;
-                break;
+                if (pChip8->inputMap[i] == 1)
+                {
+                    SDL_Log("meow");
+                    pChip8->gpr[instructionData->x] = i;
+                    return 0;
+                }
             }
         }
     }
 
-    return 0;
+    return -1;
 }
 
 /**

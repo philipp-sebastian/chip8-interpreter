@@ -11,7 +11,7 @@
 typedef struct InstructionData InstructionData_t;
 
 int sys_jump_to_addr(Chip8_t* pChip8, InstructionData_t* instructionData);
-int cls_clear_display(Chip8_t* pChip8, InstructionData_t* instructionData);
+int cls_clear_display(AppData_t* appData, InstructionData_t* instructionData);
 int ret_return_subroutine(Chip8_t* pChip8, InstructionData_t* instructionData);
 int jp_jump_to_addr(Chip8_t* pChip8, InstructionData_t* instructionData);
 int call_subroutine(Chip8_t* pChip8, InstructionData_t* instructionData);

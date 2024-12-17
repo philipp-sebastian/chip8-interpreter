@@ -20,7 +20,7 @@ uint16_t fetch(Chip8_t *pChip8) {
 void decode(AppData_t *appData, uint16_t instruction) {
     //TODO: Free memory
     InstructionData_t *instructionData = malloc(sizeof(InstructionData_t));
-    //SDL_Log("Instruction: %x", instruction);
+    SDL_Log("Instruction: %x", instruction);
     char commandType = (instruction & 0xF000) >> 12;
 
     instructionData->x = (instruction & 0x0F00) >> 8;
@@ -34,7 +34,7 @@ void decode(AppData_t *appData, uint16_t instruction) {
     switch (commandType) {
         case 0x0:
             if (instructionData->x == 0x0 && instructionData->n == 0x0) {
-                cls_clear_display(appData->pChip8, instructionData);
+                cls_clear_display(appData, instructionData);
                 snprintf(debugBuf, sizeof(debugBuf), "Executed: Clear Display (CLS)");
             } else if (instructionData->x == 0x0) {
                 ret_return_subroutine(appData->pChip8, instructionData);
@@ -194,7 +194,7 @@ void decode(AppData_t *appData, uint16_t instruction) {
             break;
     }
 
-    //SDL_Log("%s", debugBuf);
+    SDL_Log("%s", debugBuf);
     free(instructionData);
 }
 
