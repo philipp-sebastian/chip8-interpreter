@@ -13,6 +13,7 @@ SDL_AppResult registerInput(AppData_t* appData, SDL_Event* event)
         case SDL_EVENT_KEY_DOWN:
             for (int i = KEYID_1; i <= KEYID_F; i++) {
                 if (event->key.key == keyMapping[i]) {
+                    SDL_Log("Key pressed: %d", i);
                     inputMap[i] = 1;
                     break;
                 }
@@ -21,7 +22,7 @@ SDL_AppResult registerInput(AppData_t* appData, SDL_Event* event)
         case SDL_EVENT_KEY_UP:
             for (int i = KEYID_1; i <= KEYID_F; i++) {
                 if (event->key.key == keyMapping[i]) {
-                    SDL_Log("losgelassen");
+
                     inputMap[i] = 0;
                     break;
                 }

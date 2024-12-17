@@ -73,11 +73,8 @@ SDL_AppResult SDL_AppIterate(void* appData)
     if (data->windowData->currentScreen == CHIP8)
     {
         fetchDecodeCycle(data);
-        for (int i = 0; i < 16; i++)
-        {
-            SDL_Log("%d ", data->pChip8->inputMap[i]);
-        }
     }
+
     drawDisplay(data->windowData);
     Uint64 frameEnd = SDL_GetTicks();
 

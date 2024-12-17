@@ -490,8 +490,17 @@ int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    //TODO:
-    //pChip8->gpr[instructionData->x] = WaitForKeyboardInput();
+    while (1)
+    {
+        for (int i = KEYID_1; i <= KEYID_F; i++)
+        {
+            if (pChip8->inputMap[i] == 1)
+            {
+                pChip8->gpr[instructionData->x] = i;
+                break;
+            }
+        }
+    }
 
     return 0;
 }
