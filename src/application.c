@@ -3,6 +3,8 @@
 //
 
 #include "../include/application.h"
+#include "../include/input.h"
+
 
 void setRendererColor(SDL_Renderer *renderer, eColor_t color, unsigned char alpha) {
     switch (color) {
@@ -109,6 +111,11 @@ SDL_AppResult chip8EventHandler(AppData_t *appData, SDL_Event *event) {
                 resetChip8(appData);
                 return SDL_APP_CONTINUE;
         }
+    }
+    registerInput(appData, event);
+    for (int i = 0; i < 16; i++)
+    {
+        SDL_Log("%d ", appData->pChip8->inputMap[i]);
     }
     return SDL_APP_CONTINUE;
 }

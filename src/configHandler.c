@@ -15,7 +15,7 @@ int writeConfig(AppData_t* appData)
         return -1;
     }
 
-    const char keyNames[] = "123C456D789EA0BF";
+    const char keyNames[] = {"123C456D789EA0BF"};
 
     for (int i = 0; i <= KEYID_F; i++)
     {
@@ -65,7 +65,7 @@ int readConfig(AppData_t* appData)
         }
 
         char* pos = strstr(line, ": ");
-        //TODO: To lower case
+
         if (pos == NULL)
         {
             SDL_Log("Couldn't read line because of format error in line: %d", i + 1);
