@@ -113,9 +113,9 @@ SDL_AppResult chip8EventHandler(AppData_t *appData, SDL_Event *event) {
         }
     }
     registerInput(appData, event);
-    for (int i = 0; i < 16; i++)
-    {
-        SDL_Log("%d ", appData->pChip8->inputMap[i]);
-    }
+//    for (int i = 0; i < 16; i++)
+//    {
+//        SDL_Log("%d ", appData->pChip8->inputMap[i]);
+//    }
     return SDL_APP_CONTINUE;
 }

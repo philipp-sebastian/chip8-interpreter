@@ -434,10 +434,11 @@ int skp_skip_if_key_pressed(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    //TODO: if (getKeyboardInput() == pChip8->gpr[instructionData->x])
-    //{
-      //  incrementProgramCounter(pChip8);
-    //}
+    if (pChip8->inputMap[instructionData->x] == 1)
+    {
+        incrementProgramCounter(pChip8);
+        SDL_Log("It worked!");
+    }
 
     return 0;
 }
@@ -450,10 +451,10 @@ int sknp_skip_if_key_not_pressed(Chip8_t *pChip8, InstructionData_t *instruction
         return -1;
     }
 
-    //TODO: if (getKeyboardInput() != pChip8->gpr[instructionData->x])
-    //{
-      //  incrementProgramCounter(pChip8);
-    //}
+    if (pChip8->inputMap[instructionData->x] != 1)
+    {
+        incrementProgramCounter(pChip8);
+    }
 
     return 0;
 }

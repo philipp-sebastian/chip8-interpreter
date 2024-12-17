@@ -17,13 +17,16 @@ SDL_AppResult registerInput(AppData_t* appData, SDL_Event* event)
                     break;
                 }
             }
+            break;
         case SDL_EVENT_KEY_UP:
             for (int i = KEYID_1; i <= KEYID_F; i++) {
                 if (event->key.key == keyMapping[i]) {
+                    SDL_Log("losgelassen");
                     inputMap[i] = 0;
                     break;
                 }
             }
+            break;
     }
     return SDL_APP_CONTINUE;
 }
