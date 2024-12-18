@@ -74,8 +74,7 @@ void changeResolution(WindowData_t *windowData) {
 
 }
 
-void
-drawLetter(AppData_t *appData, enum Symbol letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color,
+void drawLetter(AppData_t *appData, enum Symbol letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color,
            unsigned char alpha) {
     unsigned int letterIndex = letter * RF_FONTHEIGHT;
 
@@ -112,10 +111,8 @@ SDL_AppResult chip8EventHandler(AppData_t *appData, SDL_Event *event) {
                 return SDL_APP_CONTINUE;
         }
     }
+
     registerInput(appData, event);
-//    for (int i = 0; i < 16; i++)
-//    {
-//        SDL_Log("%d ", appData->pChip8->inputMap[i]);
-//    }
+
     return SDL_APP_CONTINUE;
 }

@@ -13,7 +13,6 @@
 
 #include "SDL3/SDL_main.h"
 
-
 SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
 {
     Chip8_t* pChip8 = initializeComponents();
@@ -87,7 +86,7 @@ SDL_AppResult SDL_AppIterate(void* appData)
         timeLeft = 0;
     }
 
-    SDL_Delay(timeLeft);
+    //SDL_Delay(timeLeft); //TODO: Enable Framerate
 
     return SDL_APP_CONTINUE;
 }

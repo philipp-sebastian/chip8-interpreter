@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <pthread.h>
 #include <SDL3/SDL.h>
 
 #define RETROFONT_C

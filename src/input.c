@@ -11,20 +11,16 @@ SDL_AppResult registerInput(AppData_t* appData, SDL_Event* event)
 
     switch (event->type) {
         case SDL_EVENT_KEY_DOWN:
-            for (int i = KEYID_1; i <= KEYID_F; i++) {
+            for (int i = KEYID_0; i <= KEYID_F; i++) {
                 if (event->key.key == keyMapping[i]) {
-                    SDL_Log("Key pressed: %d", i);
+                    SDL_Log("KeyPressed: %d", i);
                     inputMap[i] = 1;
-                    for (int j = 0; j < 16; j++)
-                    {
-                        SDL_Log("%d: %d ", j, inputMap[j]);
-                    }
                     break;
                 }
             }
             break;
         case SDL_EVENT_KEY_UP:
-            for (int i = KEYID_1; i <= KEYID_F; i++) {
+            for (int i = KEYID_0; i <= KEYID_F; i++) {
                 if (event->key.key == keyMapping[i]) {
                     inputMap[i] = 0;
                     break;

@@ -20,7 +20,7 @@ uint16_t fetch(Chip8_t *pChip8) {
 void decode(AppData_t *appData, uint16_t instruction) {
     //TODO: Free memory
     InstructionData_t *instructionData = malloc(sizeof(InstructionData_t));
-    SDL_Log("Instruction: %x", instruction);
+    //SDL_Log("Instruction: %x", instruction);
     char commandType = (instruction & 0xF000) >> 12;
 
     instructionData->x = (instruction & 0x0F00) >> 8;
@@ -194,7 +194,7 @@ void decode(AppData_t *appData, uint16_t instruction) {
             break;
     }
 
-    SDL_Log("%s", debugBuf);
+    //SDL_Log("%s", debugBuf);
     free(instructionData);
 }
 

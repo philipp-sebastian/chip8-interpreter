@@ -9,9 +9,9 @@
 typedef struct AppData AppData_t;
 
 typedef enum KeyID {
-    KEYID_1 = 0, KEYID_2 = 1, KEYID_3 = 2, KEYID_C = 3, KEYID_4 = 4,
-    KEYID_5 = 5, KEYID_6 = 6, KEYID_D = 7, KEYID_7 = 8, KEYID_8 = 9,
-    KEYID_9 = 10, KEYID_E = 11, KEYID_A = 12, KEYID_0 = 13, KEYID_B = 14,
+    KEYID_0 = 0, KEYID_1 = 1, KEYID_2 = 2, KEYID_3= 3, KEYID_4 = 4,
+    KEYID_5 = 5, KEYID_6 = 6, KEYID_7 = 7, KEYID_8 = 8, KEYID_9 = 9,
+    KEYID_A = 10, KEYID_B = 11, KEYID_C = 12, KEYID_D = 13, KEYID_E = 14,
     KEYID_F = 15
 } eKeyID_t;
 

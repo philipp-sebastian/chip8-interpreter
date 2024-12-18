@@ -2,7 +2,6 @@
 
 int sys_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
 {
-
     return jp_jump_to_addr(pChip8, instructionData);
 }
 
@@ -435,8 +434,7 @@ int skp_skip_if_key_pressed(Chip8_t *pChip8, InstructionData_t *instructionData)
         return -1;
     }
 
-    SDL_Log("Frägt ab: %d", instructionData->x);
-    if (pChip8->inputMap[instructionData->x] == 1)
+    if (pChip8->inputMap[pChip8->gpr[instructionData->x]] == 1)
     {
         incrementProgramCounter(pChip8);
     }
@@ -452,7 +450,7 @@ int sknp_skip_if_key_not_pressed(Chip8_t *pChip8, InstructionData_t *instruction
         return -1;
     }
 
-    if (pChip8->inputMap[instructionData->x] != 1)
+    if (pChip8->inputMap[pChip8->gpr[instructionData->x]] != 1)
     {
         incrementProgramCounter(pChip8);
     }
@@ -497,7 +495,7 @@ int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData)
     {
         if (event.type == SDL_EVENT_KEY_DOWN)
         {
-            for (int i = KEYID_1; i <= KEYID_F; i++)
+            for (int i = KEYID_0; i <= KEYID_F; i++)
             {
                 if (pChip8->inputMap[i] == 1)
                 {
