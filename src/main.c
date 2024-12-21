@@ -67,26 +67,21 @@ SDL_AppResult SDL_AppIterate(void* appData)
 {
     AppData_t* data = (AppData_t*) appData;
 
-    //framerate
-    Uint64 frameStart = SDL_GetTicks();
+    uint64_t currentTime = SDL_GetTicks();
+    static uint64_t lastFrameTime = 0;
+
+    //TODO: Make Framerate to 500-1000Hz
     if (data->windowData->currentScreen == CHIP8)
     {
-        fetchDecodeCycle(data);
+        fetchDecodeCycle(appData);
     }
 
-    drawDisplay(data->windowData);
-    Uint64 frameEnd = SDL_GetTicks();
-
-    Uint64 frameTime = frameEnd - frameStart;
-
-    int timeLeft = DESIRED_DELTA_TIME - (float) frameTime;
-
-    if (timeLeft < 0)
+    if (currentTime - lastFrameTime >= DESIRED_DELTA_TIME)
     {
-        timeLeft = 0;
+        drawDisplay(data->windowData);
+        //TODO: Delay- / Soundtimer
+        lastFrameTime = currentTime;
     }
-
-    //SDL_Delay(timeLeft); //TODO: Enable Framerate
 
     return SDL_APP_CONTINUE;
 }

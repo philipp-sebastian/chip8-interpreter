@@ -11,7 +11,7 @@
 #include "configHandler.h"
 
 #define FPS 60
-#define DESIRED_DELTA_TIME 1000.f/(float) FPS
+#define DESIRED_DELTA_TIME (1000 / FPS)
 #define CHIP8_RENDER_SCALE 20
 #define MENU_RENDER_SCALE 4
 #define APPLICATION_WIDTH 1280
