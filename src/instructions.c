@@ -405,26 +405,41 @@ int ld_set_vx_to_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData
  * @param instructionData
  * @return
  */
-int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData) {
-    if (pChip8 == NULL || instructionData == NULL) {
+int ld_wait_for_key_press(AppData_t* appData, InstructionData_t *instructionData) {
+    if (appData->pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
+
+    static char inputMemory[16];
 
     SDL_Event event;
 
     SDL_WaitEvent(&event);
 
-    if (event.type == SDL_EVENT_KEY_DOWN) {
+    if (event.type == SDL_EVENT_KEY_UP) {
         for (int i = KEYID_0; i <= KEYID_F; i++) {
-            if (pChip8->inputMap[i] == 1) {
-                SDL_Log("meow");
-                pChip8->gpr[instructionData->x] = i;
-                return 0;
+            if (event.key.key == getConfigKeyCode(appData, i)) {
+                if (inputMemory[i] == 1)
+                {
+                    appData->pChip8->gpr[instructionData->x] = i;
+                    memset(inputMemory, 0, sizeof(inputMemory));
+                    return 0;
+                }
+
             }
         }
     }
 
+    if (event.type == SDL_EVENT_KEY_DOWN) {
+        for (int i = KEYID_0; i <= KEYID_F; i++) {
+            if (appData->pChip8->inputMap[i] == 1) {
+                SDL_Log("meow");
+                inputMemory[i] = 1;
+            }
+        }
+    }
 
+    decrementProgramCounter(appData->pChip8);
     return -1;
 }
 

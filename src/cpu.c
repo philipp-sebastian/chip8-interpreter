@@ -5,6 +5,10 @@ void incrementProgramCounter(Chip8_t *pChip8) {
     pChip8->programCounter += 2;
 }
 
+void decrementProgramCounter(Chip8_t* pChip8) {
+    pChip8->programCounter -= 2;
+}
+
 void setProgramCounter(Chip8_t *pChip8, const uint16_t *address) {
     pChip8->programCounter = *address;
 }

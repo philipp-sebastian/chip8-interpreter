@@ -26,6 +26,7 @@ typedef struct Config {
 int writeConfig(AppData_t* appData);
 int readConfig(AppData_t* appData);
 int initKeyMap(AppData_t* appData);
+SDL_Keycode getConfigKeyCode(AppData_t* appData, unsigned int index);
 SDL_Keycode getDefaultKeyCode(unsigned int index);
 
 #endif //CHIP8_INTERPRETER_CONFIGHANDLER_H

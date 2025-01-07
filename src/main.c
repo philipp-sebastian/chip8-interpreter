@@ -79,7 +79,15 @@ SDL_AppResult SDL_AppIterate(void* appData)
     if (currentTime - lastFrameTime >= DESIRED_DELTA_TIME)
     {
         drawDisplay(data->windowData);
-        //TODO: Delay- / Soundtimer
+        if (data->pChip8->delayTimer > 0) {
+            data->pChip8->delayTimer--;
+        }
+
+        //TODO: Beep!
+        if (data->pChip8->soundTimer > 0) {
+            data->pChip8->soundTimer--;
+        }
+
         lastFrameTime = currentTime;
     }
 
@@ -101,7 +109,7 @@ SDL_AppResult SDL_AppEvent(void* appData, SDL_Event* event)
         case OPTION:
             break;
         case MENU:
-            return MenuEventHandler(data, event); //TODO: ???
+            return MenuEventHandler(data, event);
     }
 
     return SDL_APP_CONTINUE;

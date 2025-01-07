@@ -22,6 +22,7 @@ typedef struct InstructionData {
 //TODO: Implement Functionpointer Array => Indices are the previous defined Makros
 
 void incrementProgramCounter(Chip8_t* pChip8);
+void decrementProgramCounter(Chip8_t* pChip8);
 void setProgramCounter(Chip8_t* pChip8, const uint16_t* address);
 uint16_t fetch(Chip8_t* pChip8);
 void decode(AppData_t* appData, uint16_t instruction);

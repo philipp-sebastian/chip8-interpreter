@@ -165,4 +165,9 @@ SDL_Keycode getDefaultKeyCode(unsigned int index)
     }
 }
 
+SDL_Keycode getConfigKeyCode(AppData_t* appData, unsigned int index)
+{
+    return appData->config.keyMap.mapping[index];
+}
+
 
