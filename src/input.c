@@ -23,6 +23,9 @@ SDL_AppResult registerInput(AppData_t* appData, SDL_Event* event)
             for (int i = KEYID_0; i <= KEYID_F; i++) {
                 if (event->key.key == keyMapping[i]) {
                     inputMap[i] = 0;
+                    if (appData->pChip8->waiting == 1) {
+                        appData->pChip8->wasPressed[i] = 1;
+                    }
                     break;
                 }
             }

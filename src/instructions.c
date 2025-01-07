@@ -405,37 +405,20 @@ int ld_set_vx_to_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData
  * @param instructionData
  * @return
  */
-int ld_wait_for_key_press(AppData_t* appData, InstructionData_t *instructionData) {
+int ld_wait_for_key_press(AppData_t *appData, InstructionData_t *instructionData) {
+    //TODO: Nochmal auf Logikfehler überprüfen
     if (appData->pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    static char inputMemory[16];
+    appData->pChip8->waiting = 1;
 
-    SDL_Event event;
-
-    SDL_WaitEvent(&event);
-
-    if (event.type == SDL_EVENT_KEY_UP) {
-        for (int i = KEYID_0; i <= KEYID_F; i++) {
-            if (event.key.key == getConfigKeyCode(appData, i)) {
-                if (inputMemory[i] == 1)
-                {
-                    appData->pChip8->gpr[instructionData->x] = i;
-                    memset(inputMemory, 0, sizeof(inputMemory));
-                    return 0;
-                }
-
-            }
-        }
-    }
-
-    if (event.type == SDL_EVENT_KEY_DOWN) {
-        for (int i = KEYID_0; i <= KEYID_F; i++) {
-            if (appData->pChip8->inputMap[i] == 1) {
-                SDL_Log("meow");
-                inputMemory[i] = 1;
-            }
+    for (int i = KEYID_0; i <= KEYID_F; i++) {
+        if (appData->pChip8->wasPressed[i] == 1) {
+            appData->pChip8->gpr[instructionData->x] = i;
+            appData->pChip8->wasPressed[i] = 0;
+            appData->pChip8->waiting = 0;
+            return 0;
         }
     }
 
