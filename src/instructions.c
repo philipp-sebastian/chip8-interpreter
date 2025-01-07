@@ -482,9 +482,9 @@ int ld_set_vx_to_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData
  * @param instructionData
  * @return
  */
-int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData)
+int ld_wait_for_key_press(AppData_t* appData, InstructionData_t *instructionData)
 {
-    if (pChip8 == NULL || instructionData == NULL)
+    if (appData->pChip8 == NULL || instructionData == NULL)
     {
         return -1;
     }
@@ -497,14 +497,22 @@ int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData)
         {
             for (int i = KEYID_0; i <= KEYID_F; i++)
             {
-                if (pChip8->inputMap[i] == 1)
+                if (appData->pChip8->inputMap[i] == 1)
                 {
                     SDL_Log("meow");
-                    pChip8->gpr[instructionData->x] = i;
+                    appData->pChip8->gpr[instructionData->x] = i;
                     return 0;
                 }
             }
+
+            if(event.key.key == SDLK_ESCAPE)
+            {
+                loadMenu(appData);
+                resetChip8(appData);
+                return 0;
+            }
         }
+
     }
 
     return -1;

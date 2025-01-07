@@ -37,7 +37,7 @@ int drw_draw_sprite(AppData_t* appData, InstructionData_t* instructionData);
 int skp_skip_if_key_pressed(Chip8_t* pChip8, InstructionData_t* instructionData);
 int sknp_skip_if_key_not_pressed(Chip8_t* pChip8, InstructionData_t* instructionData);
 int ld_set_vx_to_delay_timer(Chip8_t* pChip8, InstructionData_t* instructionData);
-int ld_wait_for_key_press(Chip8_t* pChip8, InstructionData_t* instructionData);
+int ld_wait_for_key_press(AppData_t* appData, InstructionData_t* instructionData);
 int ld_set_delay_timer(Chip8_t* pChip8, InstructionData_t* instructionData);
 int ld_set_sound_timer(Chip8_t* pChip8, InstructionData_t* instructionData);
 int add_add_i_and_vx(Chip8_t* pChip8, InstructionData_t* instructionData);
