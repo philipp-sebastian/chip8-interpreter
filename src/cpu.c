@@ -153,7 +153,7 @@ void decode(AppData_t *appData, uint16_t instruction) {
                     snprintf(debugBuf, sizeof(debugBuf), "Executed: Set Vx to Delay Timer (LD_VX_DT)");
                     break;
                 case 0x0A:
-                    ld_wait_for_key_press(appData->pChip8, instructionData);
+                    ld_wait_for_key_press(appData, instructionData);
                     snprintf(debugBuf, sizeof(debugBuf), "Executed: Wait for Key Press (LD_KEY)");
                     break;
                 case 0x15:
