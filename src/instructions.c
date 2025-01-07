@@ -1,14 +1,11 @@
 #include "../include/instructions.h"
 
-int sys_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
+int sys_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData) {
     return jp_jump_to_addr(pChip8, instructionData);
 }
 
-int cls_clear_display(AppData_t* appData, InstructionData_t *instructionData)
-{
-    if (appData->pChip8 == NULL || instructionData == NULL)
-    {
+int cls_clear_display(AppData_t *appData, InstructionData_t *instructionData) {
+    if (appData->pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -18,10 +15,8 @@ int cls_clear_display(AppData_t* appData, InstructionData_t *instructionData)
     return 0;
 }
 
-int ret_return_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ret_return_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -31,10 +26,8 @@ int ret_return_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int jp_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int jp_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -43,15 +36,12 @@ int jp_jump_to_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int call_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int call_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    if (pChip8->stack.stackPointer >= STACKSIZE)
-    {
+    if (pChip8->stack.stackPointer >= STACKSIZE) {
         SDL_Log("Error: Stackoverflow");
         return -1;
     }
@@ -64,55 +54,44 @@ int call_subroutine(Chip8_t *pChip8, InstructionData_t *instructionData)
 }
 
 //TODO: pInstructionData!
-int se_skip_if_equal(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int se_skip_if_equal(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    if (pChip8->gpr[instructionData->x] == instructionData->nn)
-    {
+    if (pChip8->gpr[instructionData->x] == instructionData->nn) {
         incrementProgramCounter(pChip8);
     }
 
     return 0;
 }
 
-int sne_skip_if_not_equal(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int sne_skip_if_not_equal(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    if (pChip8->gpr[instructionData->x] != instructionData->nn)
-    {
+    if (pChip8->gpr[instructionData->x] != instructionData->nn) {
         incrementProgramCounter(pChip8);
     }
 
     return 0;
 }
 
-int se_skip_if_vx_equals_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int se_skip_if_vx_equals_vy(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    if (pChip8->gpr[instructionData->x] == pChip8->gpr[instructionData->y])
-    {
+    if (pChip8->gpr[instructionData->x] == pChip8->gpr[instructionData->y]) {
         incrementProgramCounter(pChip8);
     }
 
     return 0;
 }
 
-int ld_set_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ld_set_vx(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -121,10 +100,8 @@ int ld_set_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int add_add_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int add_add_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -133,10 +110,8 @@ int add_add_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int ld_set_vx_to_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ld_set_vx_to_vy(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -145,10 +120,8 @@ int ld_set_vx_to_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int or_set_vx_or_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int or_set_vx_or_vy(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -157,10 +130,8 @@ int or_set_vx_or_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int and_set_vx_and_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int and_set_vx_and_vy(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -169,10 +140,8 @@ int and_set_vx_and_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int xor_set_vx_xor_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int xor_set_vx_xor_vy(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -181,60 +150,47 @@ int xor_set_vx_xor_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int add_add_vx_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int add_add_vx_vy(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
     unsigned int result = pChip8->gpr[instructionData->x] + pChip8->gpr[instructionData->y];
     pChip8->gpr[instructionData->x] = (result & 0xFF);
 
-    if (result > 255)
-    {
+    if (result > 255) {
         pChip8->gpr[VF] = 1;
-    }
-    else
-    {
+    } else {
         pChip8->gpr[VF] = 0;
     }
 
     return 0;
 }
 
-int sub_vx_minus_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int sub_vx_minus_vy(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
     unsigned char VF_Result = 0;
 
-    if (pChip8->gpr[instructionData->x] >= pChip8->gpr[instructionData->y])
-    {
+    if (pChip8->gpr[instructionData->x] >= pChip8->gpr[instructionData->y]) {
         VF_Result = 1;
     }
 
     pChip8->gpr[instructionData->x] = pChip8->gpr[instructionData->x] - pChip8->gpr[instructionData->y];
 
-    if (VF_Result == 0)
-    {
+    if (VF_Result == 0) {
         pChip8->gpr[VF] = 0;
-    }
-    else
-    {
+    } else {
         pChip8->gpr[VF] = 1;
     }
 
     return 0;
 }
 
-int shr_shift_right_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int shr_shift_right_vx(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -245,31 +201,24 @@ int shr_shift_right_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int subn_vy_minus_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int subn_vy_minus_vx(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
     pChip8->gpr[instructionData->x] = pChip8->gpr[instructionData->y] - pChip8->gpr[instructionData->x];
 
-    if (pChip8->gpr[instructionData->y] > pChip8->gpr[instructionData->x])
-    {
+    if (pChip8->gpr[instructionData->y] > pChip8->gpr[instructionData->x]) {
         pChip8->gpr[VF] = 1;
-    }
-    else
-    {
+    } else {
         pChip8->gpr[VF] = 0;
     }
 
     return 0;
 }
 
-int shl_shift_left_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int shl_shift_left_vx(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -280,15 +229,12 @@ int shl_shift_left_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int sne_skip_if_vx_not_equal_vy(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int sne_skip_if_vx_not_equal_vy(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    if (pChip8->gpr[instructionData->x] != pChip8->gpr[instructionData->y])
-    {
+    if (pChip8->gpr[instructionData->x] != pChip8->gpr[instructionData->y]) {
         incrementProgramCounter(pChip8);
     }
 
@@ -301,10 +247,8 @@ int sne_skip_if_vx_not_equal_vy(Chip8_t *pChip8, InstructionData_t *instructionD
  * @param instructionData
  * @return
  */
-int ld_set_i(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ld_set_i(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -312,10 +256,8 @@ int ld_set_i(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int jp_v0_plus_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int jp_v0_plus_addr(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -331,10 +273,8 @@ int jp_v0_plus_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int rnd_vx_random_and_byte(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int rnd_vx_random_and_byte(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -351,10 +291,8 @@ int rnd_vx_random_and_byte(Chip8_t *pChip8, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int drw_draw_sprite(AppData_t* appData, InstructionData_t *instructionData)
-{
-    if (appData->pChip8 == NULL || instructionData == NULL)
-    {
+int drw_draw_sprite(AppData_t *appData, InstructionData_t *instructionData) {
+    if (appData->pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -368,8 +306,7 @@ int drw_draw_sprite(AppData_t* appData, InstructionData_t *instructionData)
         unsigned char fetchedByte = appData->pChip8->memory[appData->pChip8->indexRegister + row];
 
         //sprite is clipping, if out of bounce
-        if ((y + row) >= CHIP8_HEIGHT)
-        {
+        if ((y + row) >= CHIP8_HEIGHT) {
             break;
         }
 
@@ -377,8 +314,7 @@ int drw_draw_sprite(AppData_t* appData, InstructionData_t *instructionData)
         for (int bit = 0; bit < BYTESIZE; bit++) {
 
             //sprite is clipping, if out of bounce
-            if ((x + bit) >= CHIP8_WIDTH)
-            {
+            if ((x + bit) >= CHIP8_WIDTH) {
                 break;
             }
 
@@ -393,21 +329,16 @@ int drw_draw_sprite(AppData_t* appData, InstructionData_t *instructionData)
             eColor_t result = 2; //TODO: Mach ein Makro!
 
             //flip bit
-            if((currentColor ^ bitValue) != currentColor)
-            {
-                if ((currentColor ^ bitValue) == BLACK)
-                {
+            if ((currentColor ^ bitValue) != currentColor) {
+                if ((currentColor ^ bitValue) == BLACK) {
                     result = BLACK;
-                }
-                else
-                {
+                } else {
                     result = WHITE;
                 }
             }
 
-            if (result != 2)
-            {
-                PixelData_t pixelData = { {x + bit, y + row},  result, 255};
+            if (result != 2) {
+                PixelData_t pixelData = {{x + bit, y + row}, result, 255};
 
                 updatePixel(appData, pixelData);
             }
@@ -427,15 +358,12 @@ int drw_draw_sprite(AppData_t* appData, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int skp_skip_if_key_pressed(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int skp_skip_if_key_pressed(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    if (pChip8->inputMap[pChip8->gpr[instructionData->x]] == 1)
-    {
+    if (pChip8->inputMap[pChip8->gpr[instructionData->x]] == 1) {
         incrementProgramCounter(pChip8);
     }
 
@@ -443,15 +371,12 @@ int skp_skip_if_key_pressed(Chip8_t *pChip8, InstructionData_t *instructionData)
 }
 
 
-int sknp_skip_if_key_not_pressed(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int sknp_skip_if_key_not_pressed(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    if (pChip8->inputMap[pChip8->gpr[instructionData->x]] != 1)
-    {
+    if (pChip8->inputMap[pChip8->gpr[instructionData->x]] != 1) {
         incrementProgramCounter(pChip8);
     }
 
@@ -464,10 +389,8 @@ int sknp_skip_if_key_not_pressed(Chip8_t *pChip8, InstructionData_t *instruction
  * @param instructionData
  * @return
  */
-int ld_set_vx_to_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ld_set_vx_to_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -482,30 +405,25 @@ int ld_set_vx_to_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData
  * @param instructionData
  * @return
  */
-int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
     SDL_Event event;
 
-    while (SDL_WaitEvent(&event))
-    {
-        if (event.type == SDL_EVENT_KEY_DOWN)
-        {
-            for (int i = KEYID_0; i <= KEYID_F; i++)
-            {
-                if (pChip8->inputMap[i] == 1)
-                {
-                    SDL_Log("meow");
-                    pChip8->gpr[instructionData->x] = i;
-                    return 0;
-                }
+    SDL_WaitEvent(&event);
+
+    if (event.type == SDL_EVENT_KEY_DOWN) {
+        for (int i = KEYID_0; i <= KEYID_F; i++) {
+            if (pChip8->inputMap[i] == 1) {
+                SDL_Log("meow");
+                pChip8->gpr[instructionData->x] = i;
+                return 0;
             }
         }
     }
+
 
     return -1;
 }
@@ -516,10 +434,8 @@ int ld_wait_for_key_press(Chip8_t *pChip8, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int ld_set_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ld_set_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -528,10 +444,8 @@ int ld_set_delay_timer(Chip8_t *pChip8, InstructionData_t *instructionData)
     return 0;
 }
 
-int ld_set_sound_timer(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ld_set_sound_timer(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -546,10 +460,8 @@ int ld_set_sound_timer(Chip8_t *pChip8, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int add_add_i_and_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int add_add_i_and_vx(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -564,10 +476,8 @@ int add_add_i_and_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int ld_set_i_to_sprite_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ld_set_i_to_sprite_addr(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
@@ -583,17 +493,14 @@ int ld_set_i_to_sprite_addr(Chip8_t *pChip8, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int ld_store_bcd(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+int ld_store_bcd(Chip8_t *pChip8, InstructionData_t *instructionData) {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
     unsigned char value = pChip8->gpr[instructionData->x];
 
-    for (int number = 2; number >= 0; number--)
-    {
+    for (int number = 2; number >= 0; number--) {
         pChip8->memory[pChip8->indexRegister + number] = value % 10;
         value /= 10;
     }
@@ -607,17 +514,14 @@ int ld_store_bcd(Chip8_t *pChip8, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int ld_store_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
+int ld_store_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData) {
     //TODO add configurability if
     // indexRegister should be incremented? Was in old chips but implemented version is more common
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    for (int counter = 0; counter <= instructionData->x; counter++)
-    {
+    for (int counter = 0; counter <= instructionData->x; counter++) {
         pChip8->memory[pChip8->indexRegister + counter] = pChip8->gpr[counter];
     }
 
@@ -630,17 +534,14 @@ int ld_store_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
  * @param instructionData
  * @return
  */
-int ld_read_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData)
-{
+int ld_read_v0_to_vx(Chip8_t *pChip8, InstructionData_t *instructionData) {
     //TODO add configurability if
     // indexRegister should be incremented? Was in old chips but implemented version is more common
-    if (pChip8 == NULL || instructionData == NULL)
-    {
+    if (pChip8 == NULL || instructionData == NULL) {
         return -1;
     }
 
-    for (int counter = 0; counter <= instructionData->x; counter ++)
-    {
+    for (int counter = 0; counter <= instructionData->x; counter++) {
         pChip8->gpr[counter] = pChip8->memory[pChip8->indexRegister + counter];
     }
 

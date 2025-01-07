@@ -107,18 +107,18 @@ int initKeyMap(AppData_t* appData)
     appData->config.keyMap.mapping[KEYID_1] = SDLK_1;
     appData->config.keyMap.mapping[KEYID_2] = SDLK_2;
     appData->config.keyMap.mapping[KEYID_3] = SDLK_3;
-    appData->config.keyMap.mapping[KEYID_C] = SDLK_C;
-    appData->config.keyMap.mapping[KEYID_4] = SDLK_4;
-    appData->config.keyMap.mapping[KEYID_5] = SDLK_5;
-    appData->config.keyMap.mapping[KEYID_6] = SDLK_6;
+    appData->config.keyMap.mapping[KEYID_C] = SDLK_4;
+    appData->config.keyMap.mapping[KEYID_4] = SDLK_Q;
+    appData->config.keyMap.mapping[KEYID_5] = SDLK_W;
+    appData->config.keyMap.mapping[KEYID_6] = SDLK_E;
     appData->config.keyMap.mapping[KEYID_D] = SDLK_R;
-    appData->config.keyMap.mapping[KEYID_7] = SDLK_7;
-    appData->config.keyMap.mapping[KEYID_8] = SDLK_8;
-    appData->config.keyMap.mapping[KEYID_9] = SDLK_9;
+    appData->config.keyMap.mapping[KEYID_7] = SDLK_A;
+    appData->config.keyMap.mapping[KEYID_8] = SDLK_S;
+    appData->config.keyMap.mapping[KEYID_9] = SDLK_D;
     appData->config.keyMap.mapping[KEYID_E] = SDLK_F;
     appData->config.keyMap.mapping[KEYID_A] = SDLK_Z;
-    appData->config.keyMap.mapping[KEYID_0] = SDLK_0;
-    appData->config.keyMap.mapping[KEYID_B] = SDLK_G;
+    appData->config.keyMap.mapping[KEYID_0] = SDLK_X;
+    appData->config.keyMap.mapping[KEYID_B] = SDLK_C;
     appData->config.keyMap.mapping[KEYID_F] = SDLK_V;
 
     return 0;
@@ -135,29 +135,29 @@ SDL_Keycode getDefaultKeyCode(unsigned int index)
         case KEYID_3:
             return SDLK_3;
         case KEYID_C:
-            return SDLK_C;
-        case KEYID_4:
             return SDLK_4;
+        case KEYID_4:
+            return SDLK_Q;
         case KEYID_5:
-            return SDLK_5;
+            return SDLK_W;
         case KEYID_6:
-            return SDLK_6;
+            return SDLK_E;
         case KEYID_D:
             return SDLK_R;
         case KEYID_7:
-            return SDLK_7;
+            return SDLK_A;
         case KEYID_8:
-            return SDLK_8;
+            return SDLK_S;
         case KEYID_9:
-            return SDLK_9;
+            return SDLK_D;
         case KEYID_E:
             return SDLK_F;
         case KEYID_A:
             return SDLK_Z;
         case KEYID_0:
-            return SDLK_0;
+            return SDLK_X;
         case KEYID_B:
-            return SDLK_G;
+            return SDLK_C;
         case KEYID_F:
             return SDLK_V;
         default:
