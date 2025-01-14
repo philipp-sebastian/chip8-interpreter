@@ -116,3 +116,52 @@ SDL_AppResult chip8EventHandler(AppData_t *appData, SDL_Event *event) {
 
     return SDL_APP_CONTINUE;
 }
+
+//TODO: Move this method in menu.c ?
+SDL_AppResult optionEventHandler(AppData_t* appData, SDL_Event *event)
+{
+    if (event->type == SDL_EVENT_KEY_DOWN) {
+        switch (event->key.key) {
+            case SDLK_ESCAPE:
+                loadMenu(appData);
+                return SDL_APP_CONTINUE;
+            case SDLK_S:
+            case SDLK_DOWN:
+                if (appData->optionData->selection.selectedItem < 3) {
+                    Position_t position;
+                    position = appData->optionData->selection.positions[appData->optionData->selection.selectedItem];
+                    drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_OPTION_FACTOR, BLACK, 255);
+                    appData->optionData->selection.selectedItem++;
+                    position = appData->optionData->selection.positions[appData->optionData->selection.selectedItem];
+                    drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_OPTION_FACTOR, WHITE, 255);
+                }
+                break;
+            case SDLK_W:
+            case SDLK_UP:
+                if (appData->optionData->selection.selectedItem > 0) {
+                    Position_t position;
+                    position = appData->optionData->selection.positions[appData->optionData->selection.selectedItem];
+                    drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_OPTION_FACTOR, BLACK, 255);
+                    appData->optionData->selection.selectedItem--;
+                    position = appData->optionData->selection.positions[appData->optionData->selection.selectedItem];
+                    drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_OPTION_FACTOR, WHITE, 255);
+                }
+                break;
+            case SDLK_RETURN:
+                switch (appData->optionData->selection.selectedItem) {
+                    //TODO: Impmenetation
+                    case CLOCK_FREQUENCY:
+                        break;
+                    case KEYBINDINGS:
+                        break;
+                    case LOGGING:
+                        break;
+                    case EXIT_OPTION:
+                        break;
+                }
+                break;
+        }
+    }
+
+    return SDL_APP_CONTINUE;
+}

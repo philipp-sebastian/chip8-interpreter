@@ -27,6 +27,7 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
     WindowData_t* windowData = malloc(sizeof(WindowData_t));
     UpdateTracker_t* updateTracker = malloc(sizeof(UpdateTracker_t));
     MenuData_t* menuData = malloc(sizeof(MenuData_t));
+    OptionData_t* optionData = malloc(sizeof(OptionData_t ));
     unsigned char* fontData = InitializeFont();
 
     windowData->updateTracker = updateTracker;
@@ -34,6 +35,7 @@ SDL_AppResult SDL_AppInit(void** appData, int argc, char* argv[])
     data->pChip8 = pChip8;
     data->fontData = fontData;
     data->menuData = menuData;
+    data->optionData = optionData;
 
     readConfig(data);
 
@@ -107,7 +109,7 @@ SDL_AppResult SDL_AppEvent(void* appData, SDL_Event* event)
         case CHIP8:
             return chip8EventHandler(data, event);
         case OPTION:
-            break;
+            return optionEventHandler(data, event);
         case MENU:
             return MenuEventHandler(data, event);
     }
@@ -125,6 +127,7 @@ void SDL_AppQuit(void* appData, SDL_AppResult result)
     free(data->windowData->updateTracker);
     free(data->windowData);
     free(data->menuData);
+    free(data->optionData);
     free(data->pChip8);
     free(data);
 

@@ -18,6 +18,7 @@
 #define APPLICATION_HEIGHT 640
 
 typedef struct MenuData MenuData_t;
+typedef struct OptionData OptionData_t;
 
 typedef enum Screen
 {
@@ -62,6 +63,7 @@ typedef struct AppData
     unsigned char* fontData;
     unsigned char display[CHIP8_WIDTH * CHIP8_RENDER_SCALE][CHIP8_HEIGHT * CHIP8_RENDER_SCALE];
     MenuData_t* menuData;
+    OptionData_t* optionData;
     Bool hasProgram; //TODO: Save in Configtextfile
     FilePath_t filePath;
     Config_t config;
@@ -74,5 +76,6 @@ void drawDisplay(WindowData_t* windowData);
 void changeResolution(WindowData_t* windowData);
 void drawLetter(AppData_t* appData, enum Symbol letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color, unsigned char alpha);
 SDL_AppResult chip8EventHandler(AppData_t* appData, SDL_Event* event);
+SDL_AppResult optionEventHandler(AppData_t* data, SDL_Event *event);
 
 #endif //CHIP8_INTERPRETER_APPLICATION_H

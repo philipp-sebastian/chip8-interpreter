@@ -19,17 +19,25 @@ void loadChip8(AppData_t* appData)
     clearScreen(appData);
 }
 
+void loadOptionsMenu(AppData_t* appData)
+{
+    appData->windowData->currentScreen = OPTION;
+    changeResolution(appData->windowData);
+    clearScreen(appData);
+    drawOptionsSelection(appData);
+}
+
 void drawMenuSelection(AppData_t *appData) {
-    unsigned int spaceBetween = 2 * FONT_SCALE_FACTOR;
-    unsigned int widthFactor = RF_FONTWIDTH * FONT_SCALE_FACTOR + spaceBetween;
-    unsigned int heightFactor = RF_FONTHEIGHT * FONT_SCALE_FACTOR + spaceBetween;
+    unsigned int spaceBetween = 2 * FONT_SCALE_MENU_FACTOR;
+    unsigned int widthFactor = RF_FONTWIDTH * FONT_SCALE_MENU_FACTOR + spaceBetween;
+    unsigned int heightFactor = RF_FONTHEIGHT * FONT_SCALE_MENU_FACTOR + spaceBetween;
 
     unsigned int maxCols = 10;
     unsigned int maxRows = 4;
 
-    unsigned int startX = (APPLICATION_WIDTH / MENU_RENDER_SCALE / FONT_SCALE_FACTOR) - (RF_FONTWIDTH / 2) -
+    unsigned int startX = (APPLICATION_WIDTH / MENU_RENDER_SCALE / 2) - (RF_FONTWIDTH / 2) -
                           ((maxCols / 2) * widthFactor) - (4 * widthFactor);
-    unsigned int startY = (APPLICATION_HEIGHT / MENU_RENDER_SCALE / FONT_SCALE_FACTOR) - (RF_FONTHEIGHT / 2) -
+    unsigned int startY = (APPLICATION_HEIGHT / MENU_RENDER_SCALE / 2) - (RF_FONTHEIGHT / 2) -
                           ((maxRows / 2) * heightFactor);
 
     unsigned int currentX = startX;
@@ -49,7 +57,7 @@ void drawMenuSelection(AppData_t *appData) {
     }
 
     drawLetter(appData, RF_DOT, appData->menuData->selection.positions[indicatorStart].x,
-               appData->menuData->selection.positions[indicatorStart].y, FONT_SCALE_FACTOR, WHITE, 255);
+               appData->menuData->selection.positions[indicatorStart].y, FONT_SCALE_MENU_FACTOR, WHITE, 255);
 
 
     int symbolBuf[10];
@@ -59,7 +67,7 @@ void drawMenuSelection(AppData_t *appData) {
     appData->menuData->startGamePosition.y = currentY;
 
     for (int i = 0; i < strlen("START GAME"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, 70);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_MENU_FACTOR, WHITE, 70);
         currentX += widthFactor;
     }
 
@@ -72,7 +80,7 @@ void drawMenuSelection(AppData_t *appData) {
     StringToSymbols("LOAD GAME", symbolBuf, sizeof(symbolBuf));
 
     for (int i = 0; i < strlen("LOAD GAME"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, 255);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_MENU_FACTOR, WHITE, 255);
         currentX += widthFactor;
     }
 
@@ -82,7 +90,7 @@ void drawMenuSelection(AppData_t *appData) {
     StringToSymbols("OPTIONS", symbolBuf, sizeof(symbolBuf));
 
     for (int i = 0; i < strlen("OPTIONS"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, 255);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_MENU_FACTOR, WHITE, 255);
         currentX += widthFactor;
     }
 
@@ -92,11 +100,82 @@ void drawMenuSelection(AppData_t *appData) {
     StringToSymbols("EXIT", symbolBuf, sizeof(symbolBuf));
 
     for (int i = 0; i < strlen("EXIT"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, 255);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_MENU_FACTOR, WHITE, 255);
         currentX += widthFactor;
     }
 
     updateGameInMemoryIndicator(appData);
+}
+
+void drawOptionsSelection(AppData_t *appData) {
+    unsigned int spaceBetween = 2 * FONT_SCALE_OPTION_FACTOR;
+    unsigned int widthFactor = RF_FONTWIDTH * FONT_SCALE_OPTION_FACTOR + spaceBetween;
+    unsigned int heightFactor = RF_FONTHEIGHT * (FONT_SCALE_OPTION_FACTOR * 3) + spaceBetween;
+
+    unsigned int maxCols = 15;
+    unsigned int maxRows = 4;
+
+    //TODO: Please help me
+    //First, take the center of the screen. After that, subtract half of one char to center the char, then center the longest word, then subtract 11 (based on looks) chars
+    unsigned int startX = (APPLICATION_WIDTH / MENU_RENDER_SCALE / 2) - (RF_FONTWIDTH / 2) -
+                          (((maxCols / 2) + 1) * widthFactor) - (10 * widthFactor);
+
+    unsigned int startY = (APPLICATION_HEIGHT / MENU_RENDER_SCALE / 2) - (RF_FONTHEIGHT / 2) -
+                          ((maxRows / 2) * heightFactor);
+
+    unsigned int currentX = startX;
+    unsigned int currentY = startY;
+
+    for (int i = 0; i < 4; i++) //TODO Makros
+    {
+        appData->optionData->selection.positions[i].x = startX - widthFactor;
+        appData->optionData->selection.positions[i].y = currentY + i * heightFactor;
+    }
+
+    enum OptionSelection indicatorStart = CLOCK_FREQUENCY;
+
+    drawLetter(appData, RF_DOT, appData->optionData->selection.positions[indicatorStart].x,
+               appData->optionData->selection.positions[indicatorStart].y, FONT_SCALE_OPTION_FACTOR, WHITE, 255);
+
+
+    int symbolBuf[15];
+    StringToSymbols("CLOCK FREQUENCY", symbolBuf, sizeof(symbolBuf)); //TODO: Change in lib
+
+    for (int i = 0; i < strlen("CLOCK FREQUENCY"); i++) {
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_OPTION_FACTOR, WHITE, 255);
+        currentX += widthFactor;
+    }
+
+    currentX = startX;
+    currentY += heightFactor;
+
+    StringToSymbols("KEY BINDINGS", symbolBuf, sizeof(symbolBuf));
+
+    for (int i = 0; i < strlen("KEY BINDINGS"); i++) {
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_OPTION_FACTOR, WHITE, 255);
+        currentX += widthFactor;
+    }
+
+    currentX = startX;
+    currentY += heightFactor;
+
+    StringToSymbols("LOGGING", symbolBuf, sizeof(symbolBuf));
+
+    for (int i = 0; i < strlen("LOGGING"); i++) {
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_OPTION_FACTOR, WHITE, 255);
+        currentX += widthFactor;
+    }
+
+    currentX = startX;
+    currentY += heightFactor;
+
+    StringToSymbols("EXIT", symbolBuf, sizeof(symbolBuf));
+
+    for (int i = 0; i < strlen("EXIT"); i++) {
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_OPTION_FACTOR, WHITE, 255);
+        currentX += widthFactor;
+    }
+
 }
 
 SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
@@ -121,10 +200,10 @@ SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
                     if (appData->menuData->selection.selectedItem < 3) {
                         Position_t position;
                         position = appData->menuData->selection.positions[appData->menuData->selection.selectedItem];
-                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_FACTOR, BLACK, 255);
+                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_MENU_FACTOR, BLACK, 255);
                         appData->menuData->selection.selectedItem++;
                         position = appData->menuData->selection.positions[appData->menuData->selection.selectedItem];
-                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_FACTOR, WHITE, 255);
+                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_MENU_FACTOR, WHITE, 255);
                     }
                     break;
                 case SDLK_W:
@@ -133,10 +212,10 @@ SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
                         !(appData->menuData->selection.selectedItem == LOAD_GAME && appData->hasProgram == FALSE)) {
                         Position_t position;
                         position = appData->menuData->selection.positions[appData->menuData->selection.selectedItem];
-                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_FACTOR, BLACK, 255);
+                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_MENU_FACTOR, BLACK, 255);
                         appData->menuData->selection.selectedItem--;
                         position = appData->menuData->selection.positions[appData->menuData->selection.selectedItem];
-                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_FACTOR, WHITE, 255);
+                        drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_MENU_FACTOR, WHITE, 255);
                     }
                     break;
                 case SDLK_RETURN:
@@ -154,6 +233,7 @@ SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
 
                             break;
                         case OPTIONS:
+                            loadOptionsMenu(appData);
                             break;
                         case EXIT:
                             return SDL_APP_SUCCESS;
@@ -172,12 +252,12 @@ void updateGameInMemoryIndicator(AppData_t *appData) {
     }
 
     drawLetter(appData, RF_DOT, appData->menuData->gameInMemoryIndicator.x, appData->menuData->gameInMemoryIndicator.y,
-               FONT_SCALE_FACTOR, color, 255);
+               FONT_SCALE_MENU_FACTOR, color, 255);
 }
 
 void updateStartGameText(AppData_t *appData) {
-    unsigned int spaceBetween = 2 * FONT_SCALE_FACTOR;
-    unsigned int widthFactor = RF_FONTWIDTH * FONT_SCALE_FACTOR + spaceBetween;
+    unsigned int spaceBetween = 2 * FONT_SCALE_MENU_FACTOR;
+    unsigned int widthFactor = RF_FONTWIDTH * FONT_SCALE_MENU_FACTOR + spaceBetween;
 
     unsigned int currentX = appData->menuData->startGamePosition.x;
     unsigned int currentY = appData->menuData->startGamePosition.y;
@@ -187,7 +267,7 @@ void updateStartGameText(AppData_t *appData) {
     unsigned char alpha = 255;
 
     for (int i = 0; i < strlen("START GAME"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, BLACK, alpha);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_MENU_FACTOR, BLACK, alpha);
         currentX += widthFactor;
     }
     currentX = appData->menuData->startGamePosition.x;
@@ -197,7 +277,7 @@ void updateStartGameText(AppData_t *appData) {
         alpha = 70;
     }
     for (int i = 0; i < strlen("START GAME"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_FACTOR, WHITE, alpha);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_MENU_FACTOR, WHITE, alpha);
         currentX += widthFactor;
     }
 }
