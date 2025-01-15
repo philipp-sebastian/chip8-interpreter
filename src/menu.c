@@ -22,6 +22,7 @@ void loadChip8(AppData_t* appData)
 void loadOptionsMenu(AppData_t* appData)
 {
     appData->windowData->currentScreen = OPTION;
+    appData->optionData->selection.selectedItem = CLOCK_FREQUENCY;
     changeResolution(appData->windowData);
     clearScreen(appData);
     drawOptionsSelection(appData);

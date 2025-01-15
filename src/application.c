@@ -157,6 +157,7 @@ SDL_AppResult optionEventHandler(AppData_t* appData, SDL_Event *event)
                     case LOGGING:
                         break;
                     case EXIT_OPTION:
+                        loadMenu(appData);
                         break;
                 }
                 break;
