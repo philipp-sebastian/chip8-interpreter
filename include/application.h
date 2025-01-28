@@ -16,6 +16,7 @@
 #define MENU_RENDER_SCALE 4
 #define APPLICATION_WIDTH 1280
 #define APPLICATION_HEIGHT 640
+#define MAX_FREQUENCY_DIGITS 8
 
 typedef struct MenuData MenuData_t;
 typedef struct OptionData OptionData_t;
@@ -77,5 +78,8 @@ void changeResolution(WindowData_t* windowData);
 void drawLetter(AppData_t* appData, enum Symbol letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color, unsigned char alpha);
 SDL_AppResult chip8EventHandler(AppData_t* appData, SDL_Event* event);
 SDL_AppResult optionEventHandler(AppData_t* data, SDL_Event *event);
+void drawFrequency(AppData_t* data, unsigned int frequency);
+void clearFrequency(AppData_t* data);
+void onItemSelect(AppData_t* appData);
 
 #endif //CHIP8_INTERPRETER_APPLICATION_H

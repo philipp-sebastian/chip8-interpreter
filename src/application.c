@@ -74,7 +74,8 @@ void changeResolution(WindowData_t *windowData) {
 
 }
 
-void drawLetter(AppData_t *appData, enum Symbol letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color,
+void
+drawLetter(AppData_t *appData, enum Symbol letter, unsigned int x, unsigned int y, unsigned int scale, eColor_t color,
            unsigned char alpha) {
     unsigned int letterIndex = letter * RF_FONTHEIGHT;
 
@@ -118,8 +119,7 @@ SDL_AppResult chip8EventHandler(AppData_t *appData, SDL_Event *event) {
 }
 
 //TODO: Move this method in menu.c ?
-SDL_AppResult optionEventHandler(AppData_t* appData, SDL_Event *event)
-{
+SDL_AppResult optionEventHandler(AppData_t *appData, SDL_Event *event) {
     if (event->type == SDL_EVENT_KEY_DOWN) {
         switch (event->key.key) {
             case SDLK_ESCAPE:
@@ -135,6 +135,7 @@ SDL_AppResult optionEventHandler(AppData_t* appData, SDL_Event *event)
                     position = appData->optionData->selection.positions[appData->optionData->selection.selectedItem];
                     drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_OPTION_FACTOR, WHITE, 255);
                 }
+                onItemSelect(appData);
                 break;
             case SDLK_W:
             case SDLK_UP:
@@ -146,6 +147,7 @@ SDL_AppResult optionEventHandler(AppData_t* appData, SDL_Event *event)
                     position = appData->optionData->selection.positions[appData->optionData->selection.selectedItem];
                     drawLetter(appData, RF_DOT, position.x, position.y, FONT_SCALE_OPTION_FACTOR, WHITE, 255);
                 }
+                onItemSelect(appData);
                 break;
             case SDLK_RETURN:
                 switch (appData->optionData->selection.selectedItem) {
@@ -161,8 +163,82 @@ SDL_AppResult optionEventHandler(AppData_t* appData, SDL_Event *event)
                         break;
                 }
                 break;
+                //Relevant for Clock-Frequency
+            case SDLK_PLUS:
+                if (appData->optionData->selection.selectedItem == CLOCK_FREQUENCY) {
+                    appData->pChip8->cpuFrequency += 50;
+                    drawFrequency(appData, appData->pChip8->cpuFrequency);
+                }
+                break;
+            case SDLK_MINUS:
+                if (appData->optionData->selection.selectedItem == CLOCK_FREQUENCY) {
+                    if (appData->pChip8->cpuFrequency > 0) {
+                        appData->pChip8->cpuFrequency -= 50;
+                    }
+                    drawFrequency(appData, appData->pChip8->cpuFrequency);
+                }
+                break;
         }
     }
 
     return SDL_APP_CONTINUE;
+}
+
+void drawFrequency(AppData_t *data, unsigned int frequency) {
+    char num[MAX_FREQUENCY_DIGITS + 1];
+    snprintf(num, sizeof(num), "%d", frequency);
+
+    int numLen = (int) strlen(num);
+
+    int symbols[numLen + 1];
+    StringToSymbols(num, symbols, numLen);
+
+    unsigned int spaceBetween = 2 * FONT_SCALE_OPTION_FACTOR;
+    unsigned int widthFactor = RF_FONTWIDTH * FONT_SCALE_OPTION_FACTOR + spaceBetween;
+
+    for (int i = 0; i < numLen; i++) {
+        drawLetter(data, symbols[i],
+                   data->optionData->selection.positions[CLOCK_FREQUENCY].x + 120 + (i * widthFactor),
+                   data->optionData->selection.positions[CLOCK_FREQUENCY].y,
+                   FONT_SCALE_OPTION_FACTOR, WHITE, 255);
+    }
+
+    // Remove old chars that are not needed anymore
+    for (int i = numLen; i < MAX_FREQUENCY_DIGITS; i++) {
+        drawLetter(data, RF_SPACE,
+                   data->optionData->selection.positions[CLOCK_FREQUENCY].x + 120 + (i * widthFactor),
+                   data->optionData->selection.positions[CLOCK_FREQUENCY].y,
+                   FONT_SCALE_OPTION_FACTOR, BLACK, 255);
+    }
+}
+
+void clearFrequency(AppData_t* data)
+{
+    unsigned int spaceBetween = 2 * FONT_SCALE_OPTION_FACTOR;
+    unsigned int widthFactor = RF_FONTWIDTH * FONT_SCALE_OPTION_FACTOR + spaceBetween;
+
+    for (int i = 0; i < MAX_FREQUENCY_DIGITS; i++) {
+        drawLetter(data, RF_SPACE,
+                   data->optionData->selection.positions[CLOCK_FREQUENCY].x + 120 + (i * widthFactor),
+                   data->optionData->selection.positions[CLOCK_FREQUENCY].y,
+                   FONT_SCALE_OPTION_FACTOR, BLACK, 255);
+    }
+}
+
+void onItemSelect(AppData_t* appData)
+{
+    //TODO: First, clear everything
+    clearFrequency(appData);
+
+    switch (appData->optionData->selection.selectedItem) {
+        case CLOCK_FREQUENCY:
+            drawFrequency(appData, appData->pChip8->cpuFrequency);
+            break;
+        case KEYBINDINGS:
+            break;
+        case LOGGING:
+            break;
+        case EXIT_OPTION:
+            break;
+    }
 }

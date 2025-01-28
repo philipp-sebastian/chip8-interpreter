@@ -37,6 +37,7 @@ typedef struct Chip8 {
     unsigned char inputMap[16];
     unsigned char wasPressed[16];
     unsigned char waiting;
+    unsigned int cpuFrequency;
 } Chip8_t;
 
 Chip8_t* initializeComponents(void);

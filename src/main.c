@@ -71,11 +71,12 @@ SDL_AppResult SDL_AppIterate(void* appData)
 
     uint64_t currentTime = SDL_GetTicks();
     static uint64_t lastFrameTime = 0;
+    static uint64_t lastFrequencyFrameTime = 0;
 
     //TODO: Make Framerate to 500-1000Hz
-    if (data->windowData->currentScreen == CHIP8)
-    {
+    if (data->windowData->currentScreen == CHIP8 && currentTime - lastFrequencyFrameTime >= (1000 / data->pChip8->cpuFrequency)) {
         fetchDecodeCycle(appData);
+        lastFrequencyFrameTime = currentTime;
     }
 
     if (currentTime - lastFrameTime >= DESIRED_DELTA_TIME)

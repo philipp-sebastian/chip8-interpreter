@@ -22,6 +22,7 @@ Chip8_t* initializeComponents(void)
     memset(pChip8->display, 0, sizeof(pChip8->display));
     pChip8->indexRegister = 0;
     pChip8->stack.stackPointer = 0;
+    pChip8->cpuFrequency = 800; //TODO: Fetch from Config
     memset(pChip8->inputMap, 0, sizeof(pChip8->inputMap));
 
     initializeFontData(pChip8);

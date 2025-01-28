@@ -177,6 +177,10 @@ void drawOptionsSelection(AppData_t *appData) {
         currentX += widthFactor;
     }
 
+    if (appData->optionData->selection.selectedItem == CLOCK_FREQUENCY)
+    {
+        drawFrequency(appData, appData->pChip8->cpuFrequency);
+    }
 }
 
 SDL_AppResult MenuEventHandler(AppData_t *appData, SDL_Event *event) {
