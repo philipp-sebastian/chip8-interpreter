@@ -67,8 +67,13 @@ void drawMenuSelection(AppData_t *appData) {
     appData->menuData->startGamePosition.x = currentX;
     appData->menuData->startGamePosition.y = currentY;
 
+    int startGameBrightness = 70;
+    if (appData->hasProgram == TRUE) {
+        startGameBrightness = 255;
+    }
+
     for (int i = 0; i < strlen("START GAME"); i++) {
-        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_MENU_FACTOR, WHITE, 70);
+        drawLetter(appData, symbolBuf[i], currentX, currentY, FONT_SCALE_MENU_FACTOR, WHITE, startGameBrightness);
         currentX += widthFactor;
     }
 
@@ -304,6 +309,10 @@ void openFileHandler(void *userdata, const char *const *fileList, int filter) {
     }
 
     const char *filePath = *fileList;
+
+    //TODO: Fixed crashing after cancel fileDialog(), maybe that causes game to render Pixels on menu?
+    if (filePath == (void *)0) return;
+
     size_t length = strlen(filePath);
 
     if (strcmp((char *) filePath + length - 4, ".ch8") != 0) {

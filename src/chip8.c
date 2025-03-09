@@ -30,6 +30,7 @@ Chip8_t* initializeComponents(void)
     return pChip8;
 }
 
+//TODO: Needed?
 void freeComponents(Chip8_t* pChip8)
 {
     free(pChip8);

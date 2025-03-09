@@ -81,5 +81,6 @@ SDL_AppResult optionEventHandler(AppData_t* data, SDL_Event *event);
 void drawFrequency(AppData_t* data, unsigned int frequency);
 void clearFrequency(AppData_t* data);
 void onItemSelect(AppData_t* appData);
+void drawKeybinds(AppData_t* data);
 
 #endif //CHIP8_INTERPRETER_APPLICATION_H
