@@ -23,6 +23,7 @@ void loadOptionsMenu(AppData_t* appData)
 {
     appData->windowData->currentScreen = OPTION;
     appData->optionData->selection.selectedItem = CLOCK_FREQUENCY;
+    appData->optionData->inKeymap = 0;
     changeResolution(appData->windowData);
     clearScreen(appData);
     drawOptionsSelection(appData);

@@ -11,6 +11,8 @@
 
 #define FONT_SCALE_MENU_FACTOR 2
 #define FONT_SCALE_OPTION_FACTOR 1
+#define SPACE_BETWEEN_OPTION (2 * FONT_SCALE_OPTION_FACTOR)
+#define WIDTH_FACTOR_OPTION (RF_FONTWIDTH * FONT_SCALE_OPTION_FACTOR + SPACE_BETWEEN_OPTION)
 
 typedef struct AppData AppData_t;
 
@@ -46,6 +48,8 @@ typedef struct MenuData
 typedef struct OptionData
 {
     SelectedOptionItem_t selection;
+    char selectedKeybind;
+    char inKeymap;
 } OptionData_t;
 
 void loadMenu(AppData_t* appData);

@@ -17,6 +17,7 @@
 #define APPLICATION_WIDTH 1280
 #define APPLICATION_HEIGHT 640
 #define MAX_FREQUENCY_DIGITS 8
+#define NO_KEYBIND_MARKED 42
 
 typedef struct MenuData MenuData_t;
 typedef struct OptionData OptionData_t;
@@ -81,6 +82,10 @@ SDL_AppResult optionEventHandler(AppData_t* data, SDL_Event *event);
 void drawFrequency(AppData_t* data, unsigned int frequency);
 void clearFrequency(AppData_t* data);
 void onItemSelect(AppData_t* appData);
-void drawKeybinds(AppData_t* data);
+void drawKeybinds(AppData_t* data, char selectedKey);
+void selectKeyInKeyMap(AppData_t* appData);
+void drawKeybind(AppData_t* data, enum KeyID keyPos, int key, unsigned char alpha);
+int getKeyPadIndex(enum KeyID key);
+enum KeyID getKeyIDFromIndex(int index);
 
 #endif //CHIP8_INTERPRETER_APPLICATION_H

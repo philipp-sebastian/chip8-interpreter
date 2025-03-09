@@ -5,7 +5,6 @@
 #include "../include/application.h"
 #include "../include/input.h"
 
-
 void setRendererColor(SDL_Renderer *renderer, eColor_t color, unsigned char alpha) {
     switch (color) {
         case BLACK:
@@ -118,15 +117,73 @@ SDL_AppResult chip8EventHandler(AppData_t *appData, SDL_Event *event) {
     return SDL_APP_CONTINUE;
 }
 
+/**
+ * Handles the rebinding of a key
+ * @param appData
+ * @param key
+ * @return 0 if key is not valid
+ */
+char rebindKey(AppData_t* appData, SDL_Keycode key) {
+    switch (key) {
+        case SDLK_BACKSPACE:
+        case SDLK_ESCAPE:
+        case SDLK_RETURN:
+        case SDLK_TAB:
+        case SDLK_DELETE:
+        case SDLK_INSERT:
+        case SDLK_HOME:
+        case SDLK_END:
+        case SDLK_PAGEUP:
+        case SDLK_PAGEDOWN:
+        case SDLK_UP:
+        case SDLK_DOWN:
+        case SDLK_LEFT:
+        case SDLK_RIGHT:
+        case SDLK_CAPSLOCK:
+        case SDLK_SCROLLLOCK:
+        case SDLK_NUMLOCKCLEAR:
+        case SDLK_PRINTSCREEN:
+        case SDLK_PAUSE:
+        case SDLK_F1: case SDLK_F2: case SDLK_F3: case SDLK_F4:
+        case SDLK_F5: case SDLK_F6: case SDLK_F7: case SDLK_F8:
+        case SDLK_F9: case SDLK_F10: case SDLK_F11: case SDLK_F12:
+            return 0;
+        default:
+            break;
+    }
+
+    appData->config.keyMap.mapping[getKeyIDFromIndex(appData->optionData->selectedKeybind)] = key;
+    if (writeConfig(appData) == -1) return 0;
+
+    selectKeyInKeyMap(appData);
+    return 1;
+}
+
 //TODO: Move this method in menu.c ?
 SDL_AppResult optionEventHandler(AppData_t *appData, SDL_Event *event) {
     if (event->type == SDL_EVENT_KEY_DOWN) {
+        if (appData->optionData->selection.selectedItem == KEYBINDINGS && appData->optionData->inKeymap == 1) {
+            if (rebindKey(appData, event->key.key)) return SDL_APP_CONTINUE;
+        }
+
         switch (event->key.key) {
             case SDLK_ESCAPE:
+                if (appData->optionData->selection.selectedItem == KEYBINDINGS && appData->optionData->inKeymap == 1) {
+                    appData->optionData->inKeymap = 0;
+                    drawKeybinds(appData, NO_KEYBIND_MARKED);
+                    break;
+                }
+
                 loadMenu(appData);
                 return SDL_APP_CONTINUE;
             case SDLK_S:
             case SDLK_DOWN:
+                if (appData->optionData->selection.selectedItem == KEYBINDINGS && appData->optionData->inKeymap == 1) {
+                    if (appData->optionData->selectedKeybind + 4 < 16) appData->optionData->selectedKeybind += 4;
+                    selectKeyInKeyMap(appData);
+                    break;
+                }
+
                 if (appData->optionData->selection.selectedItem < 3) {
                     Position_t position;
                     position = appData->optionData->selection.positions[appData->optionData->selection.selectedItem];
@@ -139,6 +196,12 @@ SDL_AppResult optionEventHandler(AppData_t *appData, SDL_Event *event) {
                 break;
             case SDLK_W:
             case SDLK_UP:
+                if (appData->optionData->selection.selectedItem == KEYBINDINGS && appData->optionData->inKeymap == 1) {
+                    if (appData->optionData->selectedKeybind - 4 >= 0) appData->optionData->selectedKeybind -= 4;
+                    selectKeyInKeyMap(appData);
+                    break;
+                }
+
                 if (appData->optionData->selection.selectedItem > 0) {
                     Position_t position;
                     position = appData->optionData->selection.positions[appData->optionData->selection.selectedItem];
@@ -156,6 +219,11 @@ SDL_AppResult optionEventHandler(AppData_t *appData, SDL_Event *event) {
                         //Unused
                         break;
                     case KEYBINDINGS:
+                        if (appData->optionData->inKeymap == 0) {
+                            appData->optionData->selectedKeybind = getKeyPadIndex(KEYID_1);
+                            appData->optionData->inKeymap = 1;
+                            selectKeyInKeyMap(appData);
+                        }
                         break;
                     case LOGGING:
                         break;
@@ -172,6 +240,11 @@ SDL_AppResult optionEventHandler(AppData_t *appData, SDL_Event *event) {
                     appData->pChip8->cpuFrequency += 50;
                     drawFrequency(appData, appData->pChip8->cpuFrequency);
                 }
+
+                if (appData->optionData->selection.selectedItem == KEYBINDINGS && appData->optionData->inKeymap == 1) {
+                    if (appData->optionData->selectedKeybind < 15) appData->optionData->selectedKeybind++;
+                    selectKeyInKeyMap(appData);
+                }
                 break;
             case SDLK_LEFT:
             case SDLK_A:
@@ -181,6 +254,11 @@ SDL_AppResult optionEventHandler(AppData_t *appData, SDL_Event *event) {
                         appData->pChip8->cpuFrequency -= 50;
                     }
                     drawFrequency(appData, appData->pChip8->cpuFrequency);
+                }
+
+                if (appData->optionData->selection.selectedItem == KEYBINDINGS && appData->optionData->inKeymap == 1) {
+                    if (appData->optionData->selectedKeybind > 0) appData->optionData->selectedKeybind--;
+                    selectKeyInKeyMap(appData);
                 }
                 break;
         }
@@ -244,42 +322,129 @@ void clearFrequency(AppData_t* data)
     }
 }
 
-//TODO: Clear function
-void drawKeybinds(AppData_t* data)
+//TODO: What to do with Return Key?
+void drawKeybinds(AppData_t* data, char selectedKey)
 {
-    unsigned int spaceBetween = 2 * FONT_SCALE_OPTION_FACTOR;
-    unsigned int widthFactor = RF_FONTWIDTH * FONT_SCALE_OPTION_FACTOR + spaceBetween;
-
-    int symbols[16];
-
-    int xCount = 0;
-    int yCount = 0;
+    char keys[16];
+    int symbolBuf[16];
 
     for (int i = 0; i < 16; i++) {
         SDL_Keycode keyCode = data->config.keyMap.mapping[i];
-        if (keyCode == SDLK_Y) keyCode = SDLK_Z;
-        if (keyCode == SDLK_Z) keyCode = SDLK_Y;
-
-        StringToSymbols(SDL_GetKeyName(keyCode), symbols + i, 1);
+        keys[i] = *SDL_GetKeyName(keyCode); //Only takes the FIRST Char from GetKeyName()
     }
 
-    //TODO: Remove me, just for testing purposes
+    StringToSymbols(keys, symbolBuf, 16);
+
     for (int i = 0; i < 16; i++) {
-        printf("%c\n", data->config.keyMap.mapping[i]);
-    }
-
-    for (int i = 0; i < 16; i++)
-    {
-        if (i != 0 && i % 4 == 0)
-        {
-            yCount++;
-            xCount = 0;
+        if (getKeyPadIndex(i) == selectedKey) {
+            drawKeybind(data, i, symbolBuf[i], 100);
+        } else {
+            drawKeybind(data, i, symbolBuf[i], 255);
         }
+    }
+}
 
-        drawLetter(data, symbols[i], data->optionData->selection.positions[CLOCK_FREQUENCY].x + 120 + (xCount * widthFactor),
-                   data->optionData->selection.positions[CLOCK_FREQUENCY].y + (yCount * 20),
-                   FONT_SCALE_OPTION_FACTOR, WHITE, 255);
-        xCount++;
+void drawKeybind(AppData_t* data, enum KeyID keyPos, int key, unsigned char alpha)
+{
+    int index = getKeyPadIndex(keyPos);
+
+    int xCount = index % 4;
+    int yCount = index / 4;
+
+    drawLetter(data, key, data->optionData->selection.positions[CLOCK_FREQUENCY].x + 120 + (xCount * WIDTH_FACTOR_OPTION),
+               data->optionData->selection.positions[CLOCK_FREQUENCY].y + (yCount * 20),
+               FONT_SCALE_OPTION_FACTOR, WHITE, alpha);
+}
+
+int getKeyPadIndex(enum KeyID key) {
+    switch (key) {
+        case KEYID_0:
+            return 13;
+            break;
+        case KEYID_1:
+            return 0;
+            break;
+        case KEYID_2:
+            return 1;
+            break;
+        case KEYID_3:
+            return 2;
+            break;
+        case KEYID_4:
+            return 4;
+            break;
+        case KEYID_5:
+            return 5;
+            break;
+        case KEYID_6:
+            return 6;
+            break;
+        case KEYID_7:
+            return 8;
+            break;
+        case KEYID_8:
+            return 9;
+            break;
+        case KEYID_9:
+            return 10;
+            break;
+        case KEYID_A:
+            return 12;
+            break;
+        case KEYID_B:
+            return 14;
+            break;
+        case KEYID_C:
+            return 3;
+            break;
+        case KEYID_D:
+            return 7;
+            break;
+        case KEYID_E:
+            return 11;
+            break;
+        case KEYID_F:
+            return 15;
+            break;
+    }
+}
+
+enum KeyID getKeyIDFromIndex(int index) {
+    switch (index) {
+        case 0:
+            return KEYID_1;
+        case 1:
+            return KEYID_2;
+        case 2:
+            return KEYID_3;
+        case 3:
+            return KEYID_C;
+        case 4:
+            return KEYID_4;
+        case 5:
+            return KEYID_5;
+        case 6:
+            return KEYID_6;
+        case 7:
+            return KEYID_D;
+        case 8:
+            return KEYID_7;
+        case 9:
+            return KEYID_8;
+        case 10:
+            return KEYID_9;
+        case 11:
+            return KEYID_E;
+        case 12:
+            return KEYID_A;
+        case 13:
+            return KEYID_0;
+        case 14:
+            return KEYID_B;
+        case 15:
+            return KEYID_F;
+        default:
+            return -1; // Invalid index
     }
 }
 
@@ -312,11 +477,18 @@ void onItemSelect(AppData_t* appData)
 //            for (int i = 0; i < 16; i++) {
 //                printf("%s", SDL_GetKeyName(appData->config.keyMap.mapping[i]));
 //            }
-            drawKeybinds(appData);
+            drawKeybinds(appData, NO_KEYBIND_MARKED);
             break;
         case LOGGING:
             break;
         case EXIT_OPTION:
             break;
     }
+}
+
+void selectKeyInKeyMap(AppData_t* appData)
+{
+    //First clear previous selections
+    clearKeybinds(appData);
+    drawKeybinds(appData, appData->optionData->selectedKeybind);
 }

@@ -413,7 +413,7 @@ int ld_wait_for_key_press(AppData_t *appData, InstructionData_t *instructionData
 
     appData->pChip8->waiting = 1;
 
-    for (int i = KEYID_0; i <= KEYID_F; i++) {
+    for (int i = 0; i <= KEYID_F; i++) {
         if (appData->pChip8->wasPressed[i] == 1) {
             appData->pChip8->gpr[instructionData->x] = i;
             appData->pChip8->wasPressed[i] = 0;
