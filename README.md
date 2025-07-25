@@ -1,6 +1,6 @@
-# CHIP‑8 Emulator
+# CHIP‑8 Interpreter
 
-A simple **CHIP‑8 emulator** written in **C** using **SDL3** for graphics and input.  
+A simple **CHIP‑8 interpreter** written in **C** using **SDL3** for graphics and input.  
 Built as a learning project to understand emulation, low‑level graphics, and timing.
 
 > ⚠️ **Disclaimer**  
